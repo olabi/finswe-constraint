@@ -1,4 +1,4 @@
-"""Write results/SHA256SUMS for every run record and trace archive under results/.
+"""Write results/SHA256SUMS for every run record and report under results/.
 
   python3 repro/checksums.py          # rewrite results/SHA256SUMS (sha256sum format)
   sha256sum -c results/SHA256SUMS     # or: python3 repro/reproduce.py, which verifies it first
