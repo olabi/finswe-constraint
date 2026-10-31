@@ -1,0 +1,33 @@
+diff --git a/tests/test_finswe_inj03.py b/tests/test_finswe_inj03.py
+new file mode 100644
+index 0000000..a7b277c
+--- /dev/null
++++ b/tests/test_finswe_inj03.py
+@@ -0,0 +1,27 @@
++from datetime import datetime, timedelta, timezone
++from email.utils import format_datetime
++
++from ai_trader.news import parse_headlines
++
++T = datetime(2026, 3, 30, 14, 0, tzinfo=timezone.utc)
++
++
++def _rss(items):
++    body = "".join(f"<item><title>{t}</title><pubDate>{format_datetime(d)}</pubDate></item>" for t, d in items)
++    return f"<rss><channel>{body}</channel></rss>"
++
++
++def test_items_after_now_are_dropped():
++    xml = _rss([("past headline", T - timedelta(hours=2)),
++                ("future headline", T + timedelta(hours=3)),
++                ("older headline", T - timedelta(hours=30))])
++    out = " | ".join(parse_headlines(xml, n=10, now=T))
++    assert "future headline" not in out
++    assert "past headline" in out and "older headline" in out
++
++
++def test_max_age_still_applies_with_future_guard():
++    xml = _rss([("fresh", T - timedelta(hours=1)), ("stale", T - timedelta(hours=50)),
++                ("ahead", T + timedelta(minutes=5))])
++    out = " | ".join(parse_headlines(xml, n=10, max_age_hours=24, now=T))
++    assert "fresh" in out and "stale" not in out and "ahead" not in out

@@ -1,0 +1,9 @@
+{
+  "id": "FSC-004-income-etf-monitor",
+  "base": "f601fd0afd055392bab34814e3fc9783adfd93f6",
+  "fix": "0ba0b78fa57c83c926fde36487373f014fc66869",
+  "family": "risk",
+  "provenance": "incident",
+  "incident_date": "2026-06-23",
+  "invariant": "The monitor alert path must apply the same income-ETF exit criteria as the engine (no trend SELL alarm on a marginal cross)."
+}

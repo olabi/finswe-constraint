@@ -1,0 +1,54 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index e66815b..72b6393 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -725,3 +725,49 @@ def test_report_once_applies_ignore_holdings(make_config, tmp_path, capsys):
+     _engine_with_broker(make_config, tmp_path, GOLDEN_CROSS_CLOSES, broker, 1).report_once()
+     out = capsys.readouterr().out
+     assert "보유 1주" in out and "골든크로스" in out
++
++
++
++# ── FinSWE-Constraint hidden tests (FSC-015): siren follows the symbol's own market ──────
++def _siren_line(make_config, tmp_path, symbol, currency, crashing):
++    import contextlib, io
++    def closes_for(sym):
++        return [100.0, 93.0] if sym in crashing else [100.0, 100.0]
++    def handler(request):
++        path = request.url.path
++        if path == "/oauth2/token":
++            return httpx.Response(200, json={"access_token": "t", "token_type": "Bearer", "expires_in": 86400})
++        if path == "/api/v1/candles":
++            sym = request.url.params.get("symbol")
++            series = closes_for(sym) if sym in ("069500", "VOO") else [50.0 + i * 0.1 for i in range(40)]
++            return ok(candles_payload(series, currency))
++        if path == "/api/v1/prices":
++            sym = request.url.params["symbols"]
++            last = closes_for(sym)[-1] if sym in ("069500", "VOO") else 54.0
++            return ok([{"symbol": sym, "lastPrice": str(last), "currency": currency,
++                        "timestamp": "2026-02-04T09:00:00+09:00"}])
++        if path == "/api/v1/exchange-rate":
++            return ok({"rate": "1400", "baseCurrency": "USD", "quoteCurrency": "KRW"})
++        return httpx.Response(404, json={})
++    engine, _ = build_engine(make_config, tmp_path, [50.0 + i * 0.1 for i in range(40)])
++    engine.client = TossClient(make_config(), transport=httpx.MockTransport(handler))
++    engine.settings.symbols = [symbol]
++    buf = io.StringIO()
++    with contextlib.redirect_stdout(buf):
++        engine.run(max_polls=1)
++    return "\n".join(l for l in buf.getvalue().splitlines() if symbol in l)
++
++
++def test_us_symbol_ignores_kospi_crash(make_config, tmp_path):
++    line = _siren_line(make_config, tmp_path, "MSFT", "USD", crashing={"069500"})
++    assert line and "🚨" not in line  # KOSPI200 crash must not flag a US stock
++
++
++def test_us_symbol_flags_sp500_crash(make_config, tmp_path):
++    line = _siren_line(make_config, tmp_path, "MSFT", "USD", crashing={"VOO"})
++    assert "🚨" in line  # the US proxy (VOO) crash must flag a US stock
++
++
++def test_kr_symbol_flags_kospi_crash(make_config, tmp_path):
++    line = _siren_line(make_config, tmp_path, "005930", "KRW", crashing={"069500"})
++    assert "🚨" in line

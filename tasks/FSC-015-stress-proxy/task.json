@@ -1,0 +1,11 @@
+{
+  "id": "FSC-015-stress-proxy",
+  "base": "40daff3915faaebdc5e35d107f252e0c53194757",
+  "fix": "9bf847c5e2cabf1f2bf3694640fca07fe7346607",
+  "family": "consistency",
+  "provenance": "incident",
+  "incident_date": "2026-07-06",
+  "handwritten": true,
+  "invariant": "The market-stress siren for a symbol is computed from that symbol's own market proxy (KR → KODEX200 069500, US → VOO).",
+  "note": "Fix bundled in 9bf847c; gold keeps only the per-market proxy change. Original test called the new private signature and checked label wording; hidden tests are behavioral (siren presence per market)."
+}

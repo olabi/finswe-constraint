@@ -1,0 +1,43 @@
+diff --git a/tests/test_finswe_inj01.py b/tests/test_finswe_inj01.py
+new file mode 100644
+index 0000000..813fedc
+--- /dev/null
++++ b/tests/test_finswe_inj01.py
+@@ -0,0 +1,37 @@
++from ai_trader.backtest import run_backtest
++from ai_trader.strategy import RuleSignal
++from conftest import make_candles
++
++
++class _Threshold:
++    """BUY the first time the last visible close reaches `level`."""
++    name = "threshold"
++    min_bars = 5
++
++    def __init__(self, level):
++        self.level = level
++
++    def evaluate(self, bars, position):
++        if position is None and bars.closes[-1] >= self.level:
++            return RuleSignal("BUY", ["level reached"])
++        return RuleSignal("HOLD", [])
++
++
++def test_signal_fills_on_the_next_bar_open():
++    closes = [100.0 + i for i in range(30)]          # close of bar k = 100 + k
++    res = run_backtest(_Threshold(112.0), make_candles(closes), fee_bps=0.0)
++    buy = next(t for t in res.trades if t.side == "BUY")
++    assert buy.price == 113.0  # signal on bar 12's close → fill at bar 13's open
++
++
++def test_strategy_never_sees_the_fill_bar():
++    seen = []
++
++    class _Spy(_Threshold):
++        def evaluate(self, bars, position):
++            seen.append(bars.closes[-1])
++            return RuleSignal("HOLD", [])
++
++    closes = [100.0 + i for i in range(20)]
++    run_backtest(_Spy(0.0), make_candles(closes))
++    assert max(seen) <= closes[-2]  # the last bar only ever serves as a fill bar

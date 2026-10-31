@@ -1,0 +1,9 @@
+FinSWE-21 is derived from TradingAgents (https://github.com/TauricResearch/TradingAgents),
+Copyright Tauric Research, licensed under the Apache License, Version 2.0
+(https://www.apache.org/licenses/LICENSE-2.0).
+
+- base: e8f5503e9b86d5c2710b0c76b1f686703968c9df (v0.7.0)
+- gold.patch / gold.public.patch: the tradingagents/dataflows/date_window.py hunk of upstream commit
+  a5b0f217e35b50286ef8a69875f2ffceacea1657, unmodified.
+- tests.patch, issue.md and the domain verifier (harness/verifiers/domain/PUB-21.py) are new work
+  of this benchmark; the hidden test exercises TradingAgents' public tool API.

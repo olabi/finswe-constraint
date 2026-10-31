@@ -1,0 +1,1958 @@
+{
+ "generated": "2026-10-31T06:49:37+00:00",
+ "repository_commit": "0aef263e56d389350c406b3d629aba3b82c27e02",
+ "kernel": {
+  "id": "kmmmvs/finswe-constraint-pilot",
+  "machine_shape": "NvidiaL4",
+  "enable_gpu": true,
+  "enable_internet": false,
+  "docker_image": "gcr.io/kaggle-private-byod/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "model_sources": [
+   "google/gemma-4/Other/gemma-4-31b-it-qat-w4a16-ct/2"
+  ],
+  "competition_sources": [
+   "gemma-4-developer-agent"
+  ],
+  "dataset_sources": [
+   "kmmmvs/finswe-pilot-data",
+   "metric/gemma-4-developer-agent-wheelhouse",
+   "kmmmvs/finswe-tradingagents-wheels"
+  ]
+ },
+ "runtime": {
+  "python": "3.12.13",
+  "vllm": "0.19.1",
+  "git": "2.34.1",
+  "gpus": "4 × NVIDIA L4, 23034 MiB",
+  "source": "Kaggle kernel log, v10–v13"
+ },
+ "datasets": {
+  "kmmmvs/finswe-pilot-data": [
+   {
+    "name": "harness/feedback.py",
+    "size": 10799,
+    "created": "2026-10-30 15:12:33.820000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-001.py",
+    "size": 2954,
+    "created": "2026-10-30 15:12:33.872000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-002.py",
+    "size": 2085,
+    "created": "2026-10-30 15:12:33.823000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-003.py",
+    "size": 1226,
+    "created": "2026-10-30 15:12:33.943000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-004.py",
+    "size": 1996,
+    "created": "2026-10-30 15:12:33.868000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-005.py",
+    "size": 2056,
+    "created": "2026-10-30 15:12:33.823000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-006.py",
+    "size": 3177,
+    "created": "2026-10-30 15:12:33.820000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-007.py",
+    "size": 2894,
+    "created": "2026-10-30 15:12:33.875000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-009.py",
+    "size": 2605,
+    "created": "2026-10-30 15:12:33.891000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-014.py",
+    "size": 1495,
+    "created": "2026-10-30 15:12:33.895000"
+   },
+   {
+    "name": "harness/verifiers/domain/FSC-015.py",
+    "size": 2136,
+    "created": "2026-10-30 15:12:33.838000"
+   },
+   {
+    "name": "harness/verifiers/domain/INJ-01.py",
+    "size": 3134,
+    "created": "2026-10-30 15:12:33.943000"
+   },
+   {
+    "name": "harness/verifiers/domain/INJ-02.py",
+    "size": 1347,
+    "created": "2026-10-30 15:12:33.892000"
+   },
+   {
+    "name": "harness/verifiers/domain/INJ-03.py",
+    "size": 2805,
+    "created": "2026-10-30 15:12:33.951000"
+   },
+   {
+    "name": "harness/verifiers/domain/INJ-04.py",
+    "size": 1243,
+    "created": "2026-10-30 15:12:33.840000"
+   },
+   {
+    "name": "harness/verifiers/domain/INJ-05.py",
+    "size": 1285,
+    "created": "2026-10-30 15:12:33.855000"
+   },
+   {
+    "name": "harness/verifiers/domain/INJ-06.py",
+    "size": 2033,
+    "created": "2026-10-30 15:12:33.868000"
+   },
+   {
+    "name": "harness/verifiers/domain/INJ-07.py",
+    "size": 1190,
+    "created": "2026-10-30 15:12:33.887000"
+   },
+   {
+    "name": "harness/verifiers/domain/PUB-21.py",
+    "size": 3831,
+    "created": "2026-10-30 15:12:33.873000"
+   },
+   {
+    "name": "harness/verifiers/domain/_calendar.py",
+    "size": 1369,
+    "created": "2026-10-30 15:12:33.909000"
+   },
+   {
+    "name": "harness/verifiers/domain/_income.py",
+    "size": 1522,
+    "created": "2026-10-30 15:12:33.841000"
+   },
+   {
+    "name": "harness/verifiers/kit.py",
+    "size": 12267,
+    "created": "2026-10-30 15:12:33.820000"
+   },
+   {
+    "name": "pilot/analyze.py",
+    "size": 9563,
+    "created": "2026-10-30 15:12:33.841000"
+   },
+   {
+    "name": "pilot/finswe_pilot.py",
+    "size": 36966,
+    "created": "2026-10-30 15:12:33.855000"
+   },
+   {
+    "name": "pilot/system.md",
+    "size": 2608,
+    "created": "2026-10-30 15:12:33.869000"
+   },
+   {
+    "name": "snapshots/FSC-001-core-guard.tgz",
+    "size": 121205,
+    "created": "2026-10-30 15:12:34.412000"
+   },
+   {
+    "name": "snapshots/FSC-002-covered-call.tgz",
+    "size": 92100,
+    "created": "2026-10-30 15:12:34.448000"
+   },
+   {
+    "name": "snapshots/FSC-003-income-etf-run.tgz",
+    "size": 86816,
+    "created": "2026-10-30 15:12:34.053000"
+   },
+   {
+    "name": "snapshots/FSC-004-income-etf-monitor.tgz",
+    "size": 81058,
+    "created": "2026-10-30 15:12:34.328000"
+   },
+   {
+    "name": "snapshots/FSC-005-report-snapshot.tgz",
+    "size": 88838,
+    "created": "2026-10-30 15:12:34.325000"
+   },
+   {
+    "name": "snapshots/FSC-006-regular-hours.tgz",
+    "size": 85725,
+    "created": "2026-10-30 15:12:34.438000"
+   },
+   {
+    "name": "snapshots/FSC-007-nxt-session.tgz",
+    "size": 86261,
+    "created": "2026-10-30 15:12:34.385000"
+   },
+   {
+    "name": "snapshots/FSC-009-hybrid-veto.tgz",
+    "size": 68117,
+    "created": "2026-10-30 15:12:34.270000"
+   },
+   {
+    "name": "snapshots/FSC-014-candle-cap.tgz",
+    "size": 109389,
+    "created": "2026-10-30 15:12:34.381000"
+   },
+   {
+    "name": "snapshots/FSC-015-stress-proxy.tgz",
+    "size": 92007,
+    "created": "2026-10-30 15:12:34.395000"
+   },
+   {
+    "name": "snapshots/FSC-C01-ctrlc-exit.tgz",
+    "size": 83575,
+    "created": "2026-10-30 15:12:34.346000"
+   },
+   {
+    "name": "snapshots/FSC-C02-monitor-network.tgz",
+    "size": 81913,
+    "created": "2026-10-30 15:12:34.384000"
+   },
+   {
+    "name": "snapshots/FSC-C03-closed-log.tgz",
+    "size": 74084,
+    "created": "2026-10-30 15:12:34.378000"
+   },
+   {
+    "name": "snapshots/INJ-01-backtest-lookahead.tgz",
+    "size": 125217,
+    "created": "2026-10-30 15:12:34.324000"
+   },
+   {
+    "name": "snapshots/INJ-02-backtest-sell-fee.tgz",
+    "size": 125206,
+    "created": "2026-10-30 15:12:34.375000"
+   },
+   {
+    "name": "snapshots/INJ-03-future-news.tgz",
+    "size": 125136,
+    "created": "2026-10-30 15:12:34.364000"
+   },
+   {
+    "name": "snapshots/INJ-04-revalidate-window.tgz",
+    "size": 125213,
+    "created": "2026-10-30 15:12:34.446000"
+   },
+   {
+    "name": "snapshots/INJ-05-accumulate-atr-floor.tgz",
+    "size": 125229,
+    "created": "2026-10-30 15:12:34.313000"
+   },
+   {
+    "name": "snapshots/INJ-06-takeprofit-rebuy.tgz",
+    "size": 124697,
+    "created": "2026-10-30 15:12:34.485000"
+   },
+   {
+    "name": "snapshots/INJ-07-priced-in-sign.tgz",
+    "size": 125058,
+    "created": "2026-10-30 15:12:34.315000"
+   },
+   {
+    "name": "snapshots/PUB-21-ta-unpadded-date.tgz",
+    "size": 3584833,
+    "created": "2026-10-30 15:12:34.260000"
+   },
+   {
+    "name": "tasks/FSC-001-core-guard/eval.json",
+    "size": 17042,
+    "created": "2026-10-30 15:12:34.201000"
+   },
+   {
+    "name": "tasks/FSC-001-core-guard/hidden.b64",
+    "size": 1880,
+    "created": "2026-10-30 15:12:34.205000"
+   },
+   {
+    "name": "tasks/FSC-001-core-guard/issue.md",
+    "size": 885,
+    "created": "2026-10-30 15:12:34.207000"
+   },
+   {
+    "name": "tasks/FSC-001-core-guard/task.json",
+    "size": 216,
+    "created": "2026-10-30 15:12:34.228000"
+   },
+   {
+    "name": "tasks/FSC-002-covered-call/eval.json",
+    "size": 12897,
+    "created": "2026-10-30 15:12:34.176000"
+   },
+   {
+    "name": "tasks/FSC-002-covered-call/hidden.b64",
+    "size": 1124,
+    "created": "2026-10-30 15:12:34.338000"
+   },
+   {
+    "name": "tasks/FSC-002-covered-call/issue.md",
+    "size": 882,
+    "created": "2026-10-30 15:12:34.234000"
+   },
+   {
+    "name": "tasks/FSC-002-covered-call/task.json",
+    "size": 276,
+    "created": "2026-10-30 15:12:34.184000"
+   },
+   {
+    "name": "tasks/FSC-003-income-etf-run/eval.json",
+    "size": 11814,
+    "created": "2026-10-30 15:12:34.205000"
+   },
+   {
+    "name": "tasks/FSC-003-income-etf-run/hidden.b64",
+    "size": 1472,
+    "created": "2026-10-30 15:12:34.503000"
+   },
+   {
+    "name": "tasks/FSC-003-income-etf-run/issue.md",
+    "size": 811,
+    "created": "2026-10-30 15:12:34.144000"
+   },
+   {
+    "name": "tasks/FSC-003-income-etf-run/task.json",
+    "size": 215,
+    "created": "2026-10-30 15:12:34.159000"
+   },
+   {
+    "name": "tasks/FSC-004-income-etf-monitor/eval.json",
+    "size": 10898,
+    "created": "2026-10-30 15:12:34.067000"
+   },
+   {
+    "name": "tasks/FSC-004-income-etf-monitor/hidden.b64",
+    "size": 972,
+    "created": "2026-10-30 15:12:34.133000"
+   },
+   {
+    "name": "tasks/FSC-004-income-etf-monitor/issue.md",
+    "size": 730,
+    "created": "2026-10-30 15:12:34.064000"
+   },
+   {
+    "name": "tasks/FSC-004-income-etf-monitor/task.json",
+    "size": 231,
+    "created": "2026-10-30 15:12:34.054000"
+   },
+   {
+    "name": "tasks/FSC-005-report-snapshot/eval.json",
+    "size": 12256,
+    "created": "2026-10-30 15:12:34.181000"
+   },
+   {
+    "name": "tasks/FSC-005-report-snapshot/hidden.b64",
+    "size": 1264,
+    "created": "2026-10-30 15:12:34.189000"
+   },
+   {
+    "name": "tasks/FSC-005-report-snapshot/issue.md",
+    "size": 767,
+    "created": "2026-10-30 15:12:34.197000"
+   },
+   {
+    "name": "tasks/FSC-005-report-snapshot/task.json",
+    "size": 224,
+    "created": "2026-10-30 15:12:34.206000"
+   },
+   {
+    "name": "tasks/FSC-006-regular-hours/eval.json",
+    "size": 11666,
+    "created": "2026-10-30 15:12:34.333000"
+   },
+   {
+    "name": "tasks/FSC-006-regular-hours/hidden.b64",
+    "size": 1588,
+    "created": "2026-10-30 15:12:34.343000"
+   },
+   {
+    "name": "tasks/FSC-006-regular-hours/issue.md",
+    "size": 824,
+    "created": "2026-10-30 15:12:34.348000"
+   },
+   {
+    "name": "tasks/FSC-006-regular-hours/task.json",
+    "size": 253,
+    "created": "2026-10-30 15:12:34.347000"
+   },
+   {
+    "name": "tasks/FSC-007-nxt-session/eval.json",
+    "size": 11667,
+    "created": "2026-10-30 15:12:34.411000"
+   },
+   {
+    "name": "tasks/FSC-007-nxt-session/hidden.b64",
+    "size": 1560,
+    "created": "2026-10-30 15:12:34.312000"
+   },
+   {
+    "name": "tasks/FSC-007-nxt-session/issue.md",
+    "size": 900,
+    "created": "2026-10-30 15:12:34.323000"
+   },
+   {
+    "name": "tasks/FSC-007-nxt-session/task.json",
+    "size": 237,
+    "created": "2026-10-30 15:12:34.330000"
+   },
+   {
+    "name": "tasks/FSC-009-hybrid-veto/eval.json",
+    "size": 9340,
+    "created": "2026-10-30 15:12:34.340000"
+   },
+   {
+    "name": "tasks/FSC-009-hybrid-veto/hidden.b64",
+    "size": 1044,
+    "created": "2026-10-30 15:12:34.330000"
+   },
+   {
+    "name": "tasks/FSC-009-hybrid-veto/issue.md",
+    "size": 865,
+    "created": "2026-10-30 15:12:34.373000"
+   },
+   {
+    "name": "tasks/FSC-009-hybrid-veto/task.json",
+    "size": 250,
+    "created": "2026-10-30 15:12:34.335000"
+   },
+   {
+    "name": "tasks/FSC-014-candle-cap/eval.json",
+    "size": 14553,
+    "created": "2026-10-30 15:12:34.236000"
+   },
+   {
+    "name": "tasks/FSC-014-candle-cap/hidden.b64",
+    "size": 1052,
+    "created": "2026-10-30 15:12:34.214000"
+   },
+   {
+    "name": "tasks/FSC-014-candle-cap/issue.md",
+    "size": 728,
+    "created": "2026-10-30 15:12:34.304000"
+   },
+   {
+    "name": "tasks/FSC-014-candle-cap/task.json",
+    "size": 277,
+    "created": "2026-10-30 15:12:34.278000"
+   },
+   {
+    "name": "tasks/FSC-015-stress-proxy/eval.json",
+    "size": 12849,
+    "created": "2026-10-30 15:12:34.374000"
+   },
+   {
+    "name": "tasks/FSC-015-stress-proxy/hidden.b64",
+    "size": 1524,
+    "created": "2026-10-30 15:12:34.361000"
+   },
+   {
+    "name": "tasks/FSC-015-stress-proxy/issue.md",
+    "size": 753,
+    "created": "2026-10-30 15:12:34.371000"
+   },
+   {
+    "name": "tasks/FSC-015-stress-proxy/task.json",
+    "size": 230,
+    "created": "2026-10-30 15:12:34.354000"
+   },
+   {
+    "name": "tasks/FSC-C01-ctrlc-exit/eval.json",
+    "size": 11239,
+    "created": "2026-10-30 15:12:34.090000"
+   },
+   {
+    "name": "tasks/FSC-C01-ctrlc-exit/hidden.b64",
+    "size": 620,
+    "created": "2026-10-30 15:12:34.107000"
+   },
+   {
+    "name": "tasks/FSC-C01-ctrlc-exit/issue.md",
+    "size": 390,
+    "created": "2026-10-30 15:12:34.113000"
+   },
+   {
+    "name": "tasks/FSC-C01-ctrlc-exit/task.json",
+    "size": 177,
+    "created": "2026-10-30 15:12:34.153000"
+   },
+   {
+    "name": "tasks/FSC-C02-monitor-network/eval.json",
+    "size": 10979,
+    "created": "2026-10-30 15:12:34.186000"
+   },
+   {
+    "name": "tasks/FSC-C02-monitor-network/hidden.b64",
+    "size": 1000,
+    "created": "2026-10-30 15:12:34.163000"
+   },
+   {
+    "name": "tasks/FSC-C02-monitor-network/issue.md",
+    "size": 495,
+    "created": "2026-10-30 15:12:34.187000"
+   },
+   {
+    "name": "tasks/FSC-C02-monitor-network/task.json",
+    "size": 201,
+    "created": "2026-10-30 15:12:34.124000"
+   },
+   {
+    "name": "tasks/FSC-C03-closed-log/eval.json",
+    "size": 9866,
+    "created": "2026-10-30 15:12:34.364000"
+   },
+   {
+    "name": "tasks/FSC-C03-closed-log/hidden.b64",
+    "size": 1064,
+    "created": "2026-10-30 15:12:34.231000"
+   },
+   {
+    "name": "tasks/FSC-C03-closed-log/issue.md",
+    "size": 484,
+    "created": "2026-10-30 15:12:34.310000"
+   },
+   {
+    "name": "tasks/FSC-C03-closed-log/task.json",
+    "size": 193,
+    "created": "2026-10-30 15:12:34.306000"
+   },
+   {
+    "name": "tasks/INJ-01-backtest-lookahead/eval.json",
+    "size": 17651,
+    "created": "2026-10-30 15:12:34.084000"
+   },
+   {
+    "name": "tasks/INJ-01-backtest-lookahead/hidden.b64",
+    "size": 896,
+    "created": "2026-10-30 15:12:34.081000"
+   },
+   {
+    "name": "tasks/INJ-01-backtest-lookahead/issue.md",
+    "size": 500,
+    "created": "2026-10-30 15:12:34.226000"
+   },
+   {
+    "name": "tasks/INJ-01-backtest-lookahead/task.json",
+    "size": 203,
+    "created": "2026-10-30 15:12:34.160000"
+   },
+   {
+    "name": "tasks/INJ-02-backtest-sell-fee/eval.json",
+    "size": 17646,
+    "created": "2026-10-30 15:12:34.095000"
+   },
+   {
+    "name": "tasks/INJ-02-backtest-sell-fee/hidden.b64",
+    "size": 816,
+    "created": "2026-10-30 15:12:34.078000"
+   },
+   {
+    "name": "tasks/INJ-02-backtest-sell-fee/issue.md",
+    "size": 376,
+    "created": "2026-10-30 15:12:34.097000"
+   },
+   {
+    "name": "tasks/INJ-02-backtest-sell-fee/task.json",
+    "size": 186,
+    "created": "2026-10-30 15:12:34.090000"
+   },
+   {
+    "name": "tasks/INJ-03-future-news/eval.json",
+    "size": 17652,
+    "created": "2026-10-30 15:12:34.122000"
+   },
+   {
+    "name": "tasks/INJ-03-future-news/hidden.b64",
+    "size": 736,
+    "created": "2026-10-30 15:12:34.110000"
+   },
+   {
+    "name": "tasks/INJ-03-future-news/issue.md",
+    "size": 520,
+    "created": "2026-10-30 15:12:34.159000"
+   },
+   {
+    "name": "tasks/INJ-03-future-news/task.json",
+    "size": 182,
+    "created": "2026-10-30 15:12:34.117000"
+   },
+   {
+    "name": "tasks/INJ-04-revalidate-window/eval.json",
+    "size": 17607,
+    "created": "2026-10-30 15:12:34.223000"
+   },
+   {
+    "name": "tasks/INJ-04-revalidate-window/hidden.b64",
+    "size": 704,
+    "created": "2026-10-30 15:12:34.225000"
+   },
+   {
+    "name": "tasks/INJ-04-revalidate-window/issue.md",
+    "size": 524,
+    "created": "2026-10-30 15:12:34.170000"
+   },
+   {
+    "name": "tasks/INJ-04-revalidate-window/task.json",
+    "size": 196,
+    "created": "2026-10-30 15:12:34.176000"
+   },
+   {
+    "name": "tasks/INJ-05-accumulate-atr-floor/eval.json",
+    "size": 17667,
+    "created": "2026-10-30 15:12:34.082000"
+   },
+   {
+    "name": "tasks/INJ-05-accumulate-atr-floor/hidden.b64",
+    "size": 748,
+    "created": "2026-10-30 15:12:34.087000"
+   },
+   {
+    "name": "tasks/INJ-05-accumulate-atr-floor/issue.md",
+    "size": 478,
+    "created": "2026-10-30 15:12:34.090000"
+   },
+   {
+    "name": "tasks/INJ-05-accumulate-atr-floor/task.json",
+    "size": 201,
+    "created": "2026-10-30 15:12:34.058000"
+   },
+   {
+    "name": "tasks/INJ-06-takeprofit-rebuy/eval.json",
+    "size": 17504,
+    "created": "2026-10-30 15:12:34.118000"
+   },
+   {
+    "name": "tasks/INJ-06-takeprofit-rebuy/hidden.b64",
+    "size": 1392,
+    "created": "2026-10-30 15:12:34.102000"
+   },
+   {
+    "name": "tasks/INJ-06-takeprofit-rebuy/issue.md",
+    "size": 522,
+    "created": "2026-10-30 15:12:34.065000"
+   },
+   {
+    "name": "tasks/INJ-06-takeprofit-rebuy/task.json",
+    "size": 220,
+    "created": "2026-10-30 15:12:34.166000"
+   },
+   {
+    "name": "tasks/INJ-07-priced-in-sign/eval.json",
+    "size": 17637,
+    "created": "2026-10-30 15:12:34.147000"
+   },
+   {
+    "name": "tasks/INJ-07-priced-in-sign/hidden.b64",
+    "size": 1780,
+    "created": "2026-10-30 15:12:34.128000"
+   },
+   {
+    "name": "tasks/INJ-07-priced-in-sign/issue.md",
+    "size": 612,
+    "created": "2026-10-30 15:12:34.145000"
+   },
+   {
+    "name": "tasks/INJ-07-priced-in-sign/task.json",
+    "size": 244,
+    "created": "2026-10-30 15:12:34.135000"
+   },
+   {
+    "name": "tasks/PUB-21-ta-unpadded-date/eval.json",
+    "size": 134270,
+    "created": "2026-10-30 15:12:34.384000"
+   },
+   {
+    "name": "tasks/PUB-21-ta-unpadded-date/hidden.b64",
+    "size": 1780,
+    "created": "2026-10-30 15:12:34.323000"
+   },
+   {
+    "name": "tasks/PUB-21-ta-unpadded-date/issue.md",
+    "size": 693,
+    "created": "2026-10-30 15:12:34.395000"
+   },
+   {
+    "name": "tasks/PUB-21-ta-unpadded-date/task.json",
+    "size": 399,
+    "created": "2026-10-30 15:12:34.341000"
+   }
+  ],
+  "metric/gemma-4-developer-agent-wheelhouse": [
+   {
+    "name": "adk_eval_core-0.1.0-py3-none-any.whl",
+    "size": 90060,
+    "created": "2026-10-12 19:51:41.560000"
+   },
+   {
+    "name": "adk_submission-0.2.13-py3-none-any.whl",
+    "size": 66528,
+    "created": "2026-10-12 19:51:41.999000"
+   },
+   {
+    "name": "anthropic-1.4.0-py3-none-any.whl",
+    "size": 1300390,
+    "created": "2026-10-12 19:51:42.027000"
+   },
+   {
+    "name": "apache_tvm_ffi-0.1.13.post3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 2955490,
+    "created": "2026-10-12 19:51:41.522000"
+   },
+   {
+    "name": "astor-0.8.1-py2.py3-none-any.whl",
+    "size": 27488,
+    "created": "2026-10-12 19:51:41.499000"
+   },
+   {
+    "name": "bitsandbytes-0.46.1-py3-none-manylinux_2_24_x86_64.whl",
+    "size": 72865511,
+    "created": "2026-10-12 19:51:43.001000"
+   },
+   {
+    "name": "cbor2-6.1.4-cp312-cp312-manylinux_2_28_x86_64.whl",
+    "size": 461193,
+    "created": "2026-10-12 19:51:41.537000"
+   },
+   {
+    "name": "compressed_tensors-0.15.0.1-py3-none-any.whl",
+    "size": 194260,
+    "created": "2026-10-12 19:51:41.450000"
+   },
+   {
+    "name": "depyf-0.20.0-py3-none-any.whl",
+    "size": 39381,
+    "created": "2026-10-12 19:51:40.264000"
+   },
+   {
+    "name": "diskcache-5.6.3-py3-none-any.whl",
+    "size": 45550,
+    "created": "2026-10-12 19:51:41.585000"
+   },
+   {
+    "name": "flashinfer_cubin-0.6.6-py3-none-any.whl",
+    "size": 267661457,
+    "created": "2026-10-12 19:51:59.831000"
+   },
+   {
+    "name": "flashinfer_python-0.6.6-py3-none-any.whl",
+    "size": 7817047,
+    "created": "2026-10-12 19:51:42.057000"
+   },
+   {
+    "name": "gguf-0.19.0-py3-none-any.whl",
+    "size": 118475,
+    "created": "2026-10-12 19:51:42.617000"
+   },
+   {
+    "name": "google_adk-1.36.1-py3-none-any.whl",
+    "size": 2877731,
+    "created": "2026-10-12 19:51:41.409000"
+   },
+   {
+    "name": "google_genai-2.11.0-py3-none-any.whl",
+    "size": 984162,
+    "created": "2026-10-12 19:51:40.276000"
+   },
+   {
+    "name": "ijson-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 149848,
+    "created": "2026-10-12 19:51:40.264000"
+   },
+   {
+    "name": "interegular-0.3.3-py37-none-any.whl",
+    "size": 23635,
+    "created": "2026-10-12 19:51:41.543000"
+   },
+   {
+    "name": "llguidance-1.3.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 3033133,
+    "created": "2026-10-12 19:51:41.419000"
+   },
+   {
+    "name": "lm_format_enforcer-0.11.3-py3-none-any.whl",
+    "size": 45418,
+    "created": "2026-10-12 19:51:48.501000"
+   },
+   {
+    "name": "loguru-0.7.3-py3-none-any.whl",
+    "size": 61595,
+    "created": "2026-10-12 19:51:41.472000"
+   },
+   {
+    "name": "mistral_common-1.11.7-py3-none-any.whl",
+    "size": 6553583,
+    "created": "2026-10-12 19:51:41.672000"
+   },
+   {
+    "name": "model_hosting_container_standards-0.1.16-py3-none-any.whl",
+    "size": 125666,
+    "created": "2026-10-12 19:51:40.264000"
+   },
+   {
+    "name": "msgspec-0.21.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 225025,
+    "created": "2026-10-12 19:51:41.388000"
+   },
+   {
+    "name": "nvidia_cudnn_frontend-1.18.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 2159245,
+    "created": "2026-10-12 19:51:42.053000"
+   },
+   {
+    "name": "openai_harmony-0.0.8-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 2953260,
+    "created": "2026-10-12 19:51:41.532000"
+   },
+   {
+    "name": "opentelemetry_exporter_otlp-1.44.0-py3-none-any.whl",
+    "size": 6727,
+    "created": "2026-10-12 19:51:41.417000"
+   },
+   {
+    "name": "opentelemetry_semantic_conventions_ai-0.5.1-py3-none-any.whl",
+    "size": 11250,
+    "created": "2026-10-12 19:51:41.812000"
+   },
+   {
+    "name": "outlines_core-0.2.11-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 2287677,
+    "created": "2026-10-12 19:51:41.361000"
+   },
+   {
+    "name": "partial_json_parser-0.2.1.1.post7-py3-none-any.whl",
+    "size": 10877,
+    "created": "2026-10-12 19:51:40.264000"
+   },
+   {
+    "name": "prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl",
+    "size": 19649,
+    "created": "2026-10-12 19:51:41.306000"
+   },
+   {
+    "name": "pybase64-1.5.0-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl",
+    "size": 94681,
+    "created": "2026-10-12 19:51:41.463000"
+   },
+   {
+    "name": "pycountry-26.2.16-py3-none-any.whl",
+    "size": 8044600,
+    "created": "2026-10-12 19:51:54.023000"
+   },
+   {
+    "name": "pydantic_extra_types-2.11.2-py3-none-any.whl",
+    "size": 82851,
+    "created": "2026-10-12 19:51:41.978000"
+   },
+   {
+    "name": "quack_kernels-0.6.4-py3-none-any.whl",
+    "size": 728458,
+    "created": "2026-10-12 19:51:41.613000"
+   },
+   {
+    "name": "safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 506502,
+    "created": "2026-10-12 19:51:41.795000"
+   },
+   {
+    "name": "setproctitle-1.3.7-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl",
+    "size": 32932,
+    "created": "2026-10-12 19:51:41.309000"
+   },
+   {
+    "name": "swegemma-0.2.11-py3-none-any.whl",
+    "size": 119670,
+    "created": "2026-10-12 19:51:48.490000"
+   },
+   {
+    "name": "tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 3274982,
+    "created": "2026-10-12 19:51:41.612000"
+   },
+   {
+    "name": "transformers-5.13.1-py3-none-any.whl",
+    "size": 11503977,
+    "created": "2026-10-12 19:51:42.023000"
+   },
+   {
+    "name": "vllm-0.19.1-cp38-abi3-manylinux_2_31_x86_64.whl",
+    "size": 433132704,
+    "created": "2026-10-12 19:51:57.020000"
+   },
+   {
+    "name": "xgrammar-0.2.5.post1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 48149933,
+    "created": "2026-10-12 19:51:43.487000"
+   }
+  ],
+  "kmmmvs/finswe-tradingagents-wheels": [
+   {
+    "name": "aiosqlite-0.22.1-py3-none-any.whl",
+    "size": 17405,
+    "created": "2026-10-30 07:22:34.374000"
+   },
+   {
+    "name": "annotated_doc-0.0.5-py3-none-any.whl",
+    "size": 5302,
+    "created": "2026-10-30 07:22:34.524000"
+   },
+   {
+    "name": "annotated_types-0.8.0-py3-none-any.whl",
+    "size": 13427,
+    "created": "2026-10-30 07:22:34.388000"
+   },
+   {
+    "name": "anthropic-2.3.0-py3-none-any.whl",
+    "size": 2216980,
+    "created": "2026-10-30 07:22:34.395000"
+   },
+   {
+    "name": "anyio-4.15.1-py3-none-any.whl",
+    "size": 132079,
+    "created": "2026-10-30 07:22:34.372000"
+   },
+   {
+    "name": "attrs-26.1.0-py3-none-any.whl",
+    "size": 67548,
+    "created": "2026-10-30 07:22:34.559000"
+   },
+   {
+    "name": "beautifulsoup4-4.15.0-py3-none-any.whl",
+    "size": 109924,
+    "created": "2026-10-30 07:22:34.572000"
+   },
+   {
+    "name": "certifi-2026.10.23-py3-none-any.whl",
+    "size": 135082,
+    "created": "2026-10-30 07:22:34.639000"
+   },
+   {
+    "name": "cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 221822,
+    "created": "2026-10-30 07:22:34.308000"
+   },
+   {
+    "name": "charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 257601,
+    "created": "2026-10-30 07:22:34.617000"
+   },
+   {
+    "name": "cryptography-50.0.2-cp311-abi3-manylinux_2_28_x86_64.whl",
+    "size": 4753050,
+    "created": "2026-10-30 07:22:34.581000"
+   },
+   {
+    "name": "curl_cffi-0.17.0-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 14053278,
+    "created": "2026-10-30 07:22:35.047000"
+   },
+   {
+    "name": "distro-1.9.0-py3-none-any.whl",
+    "size": 20277,
+    "created": "2026-10-30 07:22:34.617000"
+   },
+   {
+    "name": "docstring_parser-0.18.0-py3-none-any.whl",
+    "size": 22484,
+    "created": "2026-10-30 07:22:34.578000"
+   },
+   {
+    "name": "filetype-1.2.0-py2.py3-none-any.whl",
+    "size": 19970,
+    "created": "2026-10-30 07:22:34.663000"
+   },
+   {
+    "name": "google_auth-2.62.0-py3-none-any.whl",
+    "size": 267911,
+    "created": "2026-10-30 07:22:34.420000"
+   },
+   {
+    "name": "google_genai-2.34.0-py3-none-any.whl",
+    "size": 1258155,
+    "created": "2026-10-30 07:22:34.700000"
+   },
+   {
+    "name": "h11-0.16.0-py3-none-any.whl",
+    "size": 37515,
+    "created": "2026-10-30 07:22:34.675000"
+   },
+   {
+    "name": "httpcore-1.0.9-py3-none-any.whl",
+    "size": 78784,
+    "created": "2026-10-30 07:22:34.710000"
+   },
+   {
+    "name": "httpcore2-2.16.0-py3-none-any.whl",
+    "size": 85070,
+    "created": "2026-10-30 07:22:34.616000"
+   },
+   {
+    "name": "httpx-0.28.1-py3-none-any.whl",
+    "size": 73517,
+    "created": "2026-10-30 07:22:34.721000"
+   },
+   {
+    "name": "httpx2-2.16.0-py3-none-any.whl",
+    "size": 97880,
+    "created": "2026-10-30 07:22:34.729000"
+   },
+   {
+    "name": "idna-3.20-py3-none-any.whl",
+    "size": 69583,
+    "created": "2026-10-30 07:22:34.799000"
+   },
+   {
+    "name": "iniconfig-2.3.1-py3-none-any.whl",
+    "size": 7552,
+    "created": "2026-10-30 07:22:34.762000"
+   },
+   {
+    "name": "jiter-0.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 336286,
+    "created": "2026-10-30 07:22:34.847000"
+   },
+   {
+    "name": "jsonpatch-1.38-py3-none-any.whl",
+    "size": 17440,
+    "created": "2026-10-30 07:22:34.733000"
+   },
+   {
+    "name": "jsonpointer-3.6-py3-none-any.whl",
+    "size": 9333,
+    "created": "2026-10-30 07:22:34.425000"
+   },
+   {
+    "name": "langchain_anthropic-1.7.7-py3-none-any.whl",
+    "size": 65543,
+    "created": "2026-10-30 07:22:34.825000"
+   },
+   {
+    "name": "langchain_core-1.7.3-py3-none-any.whl",
+    "size": 577074,
+    "created": "2026-10-30 07:22:34.782000"
+   },
+   {
+    "name": "langchain_google_genai-4.4.2-py3-none-any.whl",
+    "size": 81915,
+    "created": "2026-10-30 07:22:34.808000"
+   },
+   {
+    "name": "langchain_openai-1.7.3-py3-none-any.whl",
+    "size": 146342,
+    "created": "2026-10-30 07:22:34.877000"
+   },
+   {
+    "name": "langchain_protocol-0.0.20-py3-none-any.whl",
+    "size": 7347,
+    "created": "2026-10-30 07:22:34.757000"
+   },
+   {
+    "name": "langgraph-1.2.18-py3-none-any.whl",
+    "size": 260837,
+    "created": "2026-10-30 07:22:34.486000"
+   },
+   {
+    "name": "langgraph_checkpoint-4.3.1-py3-none-any.whl",
+    "size": 58093,
+    "created": "2026-10-30 07:22:35.031000"
+   },
+   {
+    "name": "langgraph_checkpoint_sqlite-3.1.2-py3-none-any.whl",
+    "size": 41844,
+    "created": "2026-10-30 07:22:34.849000"
+   },
+   {
+    "name": "langgraph_prebuilt-1.1.1-py3-none-any.whl",
+    "size": 42254,
+    "created": "2026-10-30 07:22:34.851000"
+   },
+   {
+    "name": "langgraph_sdk-0.4.10-py3-none-any.whl",
+    "size": 167854,
+    "created": "2026-10-30 07:22:34.967000"
+   },
+   {
+    "name": "langsmith-0.14.16-py3-none-any.whl",
+    "size": 933680,
+    "created": "2026-10-30 07:22:34.901000"
+   },
+   {
+    "name": "lxml-6.1.3-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 5244675,
+    "created": "2026-10-30 07:22:34.814000"
+   },
+   {
+    "name": "markdown_it_py-4.2.0-py3-none-any.whl",
+    "size": 91687,
+    "created": "2026-10-30 07:22:34.863000"
+   },
+   {
+    "name": "mdurl-0.1.2-py3-none-any.whl",
+    "size": 9979,
+    "created": "2026-10-30 07:22:34.883000"
+   },
+   {
+    "name": "multitasking-0.0.13-py3-none-any.whl",
+    "size": 16380,
+    "created": "2026-10-30 07:22:34.872000"
+   },
+   {
+    "name": "numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 16727283,
+    "created": "2026-10-30 07:22:35.225000"
+   },
+   {
+    "name": "openai-3.41.0-py3-none-any.whl",
+    "size": 2380171,
+    "created": "2026-10-30 07:22:34.978000"
+   },
+   {
+    "name": "opentelemetry_api-1.45.2-py3-none-any.whl",
+    "size": 60335,
+    "created": "2026-10-30 07:22:34.631000"
+   },
+   {
+    "name": "orjson-3.13.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 130612,
+    "created": "2026-10-30 07:22:35.092000"
+   },
+   {
+    "name": "ormsgpack-1.13.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 254913,
+    "created": "2026-10-30 07:22:34.944000"
+   },
+   {
+    "name": "packaging-26.3-py3-none-any.whl",
+    "size": 129956,
+    "created": "2026-10-30 07:22:34.974000"
+   },
+   {
+    "name": "pandas-3.1.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 12019688,
+    "created": "2026-10-30 07:22:35.141000"
+   },
+   {
+    "name": "peewee-4.5.3-py3-none-any.whl",
+    "size": 194532,
+    "created": "2026-10-30 07:22:34.946000"
+   },
+   {
+    "name": "platformdirs-4.14.0-py3-none-any.whl",
+    "size": 35259,
+    "created": "2026-10-30 07:22:34.787000"
+   },
+   {
+    "name": "pluggy-1.7.0-py3-none-any.whl",
+    "size": 27082,
+    "created": "2026-10-30 07:22:34.980000"
+   },
+   {
+    "name": "prompt_toolkit-3.0.53-py3-none-any.whl",
+    "size": 392288,
+    "created": "2026-10-30 07:22:34.966000"
+   },
+   {
+    "name": "protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl",
+    "size": 343223,
+    "created": "2026-10-30 07:22:35.001000"
+   },
+   {
+    "name": "pyasn1-0.6.5-py3-none-any.whl",
+    "size": 84807,
+    "created": "2026-10-30 07:22:34.998000"
+   },
+   {
+    "name": "pyasn1_modules-0.4.2-py3-none-any.whl",
+    "size": 181259,
+    "created": "2026-10-30 07:22:35.033000"
+   },
+   {
+    "name": "pycparser-3.12-py3-none-any.whl",
+    "size": 62600,
+    "created": "2026-10-30 07:22:34.954000"
+   },
+   {
+    "name": "pydantic-2.14.2-py3-none-any.whl",
+    "size": 490403,
+    "created": "2026-10-30 07:22:34.938000"
+   },
+   {
+    "name": "pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 2242782,
+    "created": "2026-10-30 07:22:35.084000"
+   },
+   {
+    "name": "pygments-2.21.0-py3-none-any.whl",
+    "size": 1250147,
+    "created": "2026-10-30 07:22:35.071000"
+   },
+   {
+    "name": "pytest-9.2.0-py3-none-any.whl",
+    "size": 411776,
+    "created": "2026-10-30 07:22:35.001000"
+   },
+   {
+    "name": "pytest_subtests-0.15.0-py3-none-any.whl",
+    "size": 9185,
+    "created": "2026-10-30 07:22:35.057000"
+   },
+   {
+    "name": "python_dateutil-3.0.0-py2.py3-none-any.whl",
+    "size": 94659,
+    "created": "2026-10-30 07:22:35.057000"
+   },
+   {
+    "name": "python_dotenv-1.2.4-py3-none-any.whl",
+    "size": 23266,
+    "created": "2026-10-30 07:22:35.026000"
+   },
+   {
+    "name": "pytz-2026.6-py2.py3-none-any.whl",
+    "size": 506321,
+    "created": "2026-10-30 07:22:35.065000"
+   },
+   {
+    "name": "pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 807870,
+    "created": "2026-10-30 07:22:35.045000"
+   },
+   {
+    "name": "questionary-2.1.1-py3-none-any.whl",
+    "size": 36753,
+    "created": "2026-10-30 07:22:35.233000"
+   },
+   {
+    "name": "regex-2026.9.29-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 807783,
+    "created": "2026-10-30 07:22:35.134000"
+   },
+   {
+    "name": "requests-2.34.2-py3-none-any.whl",
+    "size": 73075,
+    "created": "2026-10-30 07:22:35.082000"
+   },
+   {
+    "name": "requests_toolbelt-1.0.0-py2.py3-none-any.whl",
+    "size": 54481,
+    "created": "2026-10-30 07:22:35.026000"
+   },
+   {
+    "name": "requirements.txt",
+    "size": 1698,
+    "created": "2026-10-30 07:22:35.086000"
+   },
+   {
+    "name": "rich-15.0.0-py3-none-any.whl",
+    "size": 310654,
+    "created": "2026-10-30 07:22:35.026000"
+   },
+   {
+    "name": "ruff-0.17.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 10577491,
+    "created": "2026-10-30 07:22:35.333000"
+   },
+   {
+    "name": "shellingham-1.5.4-py2.py3-none-any.whl",
+    "size": 9755,
+    "created": "2026-10-30 07:22:35.099000"
+   },
+   {
+    "name": "six-1.17.0-py2.py3-none-any.whl",
+    "size": 11050,
+    "created": "2026-10-30 07:22:35.125000"
+   },
+   {
+    "name": "sniffio-1.3.1-py3-none-any.whl",
+    "size": 10235,
+    "created": "2026-10-30 07:22:35.087000"
+   },
+   {
+    "name": "soupsieve-3.0.4-py3-none-any.whl",
+    "size": 42458,
+    "created": "2026-10-30 07:22:35.159000"
+   },
+   {
+    "name": "sqlite_vec-0.1.9-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux1_x86_64.whl",
+    "size": 163388,
+    "created": "2026-10-30 07:22:35.071000"
+   },
+   {
+    "name": "stockstats-0.6.10-py3-none-any.whl",
+    "size": 35001,
+    "created": "2026-10-30 07:22:35.120000"
+   },
+   {
+    "name": "tenacity-9.1.4-py3-none-any.whl",
+    "size": 28926,
+    "created": "2026-10-30 07:22:35.117000"
+   },
+   {
+    "name": "tiktoken-0.14.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+    "size": 1204197,
+    "created": "2026-10-30 07:22:35.208000"
+   },
+   {
+    "name": "truststore-0.10.5-py3-none-any.whl",
+    "size": 19017,
+    "created": "2026-10-30 07:22:35.205000"
+   },
+   {
+    "name": "typer-0.27.3-py3-none-any.whl",
+    "size": 123312,
+    "created": "2026-10-30 07:22:35.114000"
+   },
+   {
+    "name": "typing_extensions-4.16.0-py3-none-any.whl",
+    "size": 45571,
+    "created": "2026-10-30 07:22:35.162000"
+   },
+   {
+    "name": "typing_inspection-0.4.4-py3-none-any.whl",
+    "size": 14750,
+    "created": "2026-10-30 07:22:35.158000"
+   },
+   {
+    "name": "tzdata-2026.6-py2.py3-none-any.whl",
+    "size": 348210,
+    "created": "2026-10-30 07:22:35.195000"
+   },
+   {
+    "name": "urllib3-2.8.0-py3-none-any.whl",
+    "size": 135717,
+    "created": "2026-10-30 07:22:35.249000"
+   },
+   {
+    "name": "uuid_utils-0.19.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 330342,
+    "created": "2026-10-30 07:22:35.172000"
+   },
+   {
+    "name": "wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 785946,
+    "created": "2026-10-30 07:22:35.137000"
+   },
+   {
+    "name": "websockets-17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl",
+    "size": 225795,
+    "created": "2026-10-30 07:22:35.186000"
+   },
+   {
+    "name": "wrapt-2.5.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl",
+    "size": 250614,
+    "created": "2026-10-30 07:22:35.220000"
+   },
+   {
+    "name": "xxhash-4.0.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 261797,
+    "created": "2026-10-30 07:22:35.229000"
+   },
+   {
+    "name": "yfinance-1.7.0-py3-none-any.whl",
+    "size": 149341,
+    "created": "2026-10-30 07:22:35.414000"
+   },
+   {
+    "name": "zstandard-0.25.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 5546993,
+    "created": "2026-10-30 07:22:35.436000"
+   }
+  ]
+ },
+ "tradingagents_wheels": {
+  "python_tag": "cp312",
+  "count": 93,
+  "requirements": [
+   "aiosqlite==0.22.1",
+   "annotated-doc==0.0.5",
+   "annotated-types==0.8.0",
+   "anthropic==2.3.0",
+   "anyio==4.15.1",
+   "attrs==26.1.0",
+   "beautifulsoup4==4.15.0",
+   "certifi==2026.10.23",
+   "cffi==2.1.1",
+   "charset-normalizer==3.5.2",
+   "cryptography==50.0.2",
+   "curl_cffi==0.17.0",
+   "distro==1.9.0",
+   "docstring_parser==0.18.0",
+   "filetype==1.2.0",
+   "google-auth==2.62.0",
+   "google-genai==2.34.0",
+   "h11==0.16.0",
+   "httpcore==1.0.9",
+   "httpcore2==2.16.0",
+   "httpx==0.28.1",
+   "httpx2==2.16.0",
+   "idna==3.20",
+   "iniconfig==2.3.1",
+   "jiter==0.18.0",
+   "jsonpatch==1.38",
+   "jsonpointer==3.6",
+   "langchain-anthropic==1.7.7",
+   "langchain-core==1.7.3",
+   "langchain-google-genai==4.4.2",
+   "langchain-openai==1.7.3",
+   "langchain-protocol==0.0.20",
+   "langgraph==1.2.18",
+   "langgraph-checkpoint==4.3.1",
+   "langgraph-checkpoint-sqlite==3.1.2",
+   "langgraph-prebuilt==1.1.1",
+   "langgraph-sdk==0.4.10",
+   "langsmith==0.14.16",
+   "lxml==6.1.3",
+   "markdown-it-py==4.2.0",
+   "mdurl==0.1.2",
+   "multitasking==0.0.13",
+   "numpy==2.5.4",
+   "openai==3.41.0",
+   "opentelemetry-api==1.45.2",
+   "orjson==3.13.0",
+   "ormsgpack==1.13.0",
+   "packaging==26.3",
+   "pandas==3.1.0",
+   "peewee==4.5.3",
+   "platformdirs==4.14.0",
+   "pluggy==1.7.0",
+   "prompt_toolkit==3.0.53",
+   "protobuf==7.36.2",
+   "pyasn1==0.6.5",
+   "pyasn1_modules==0.4.2",
+   "pycparser==3.12",
+   "pydantic==2.14.2",
+   "pydantic_core==2.50.2",
+   "Pygments==2.21.0",
+   "pytest==9.2.0",
+   "pytest-subtests==0.15.0",
+   "python-dateutil==3.0.0",
+   "python-dotenv==1.2.4",
+   "pytz==2026.6",
+   "PyYAML==6.0.3",
+   "questionary==2.1.1",
+   "regex==2026.9.29",
+   "requests==2.34.2",
+   "requests-toolbelt==1.0.0",
+   "rich==15.0.0",
+   "ruff==0.17.3",
+   "shellingham==1.5.4",
+   "six==1.17.0",
+   "sniffio==1.3.1",
+   "soupsieve==3.0.4",
+   "sqlite-vec==0.1.9",
+   "stockstats==0.6.10",
+   "tenacity==9.1.4",
+   "tiktoken==0.14.0",
+   "truststore==0.10.5",
+   "typer==0.27.3",
+   "typing-inspection==0.4.4",
+   "typing_extensions==4.16.0",
+   "tzdata==2026.6",
+   "urllib3==2.8.0",
+   "uuid_utils==0.19.0",
+   "wcwidth==0.9.4",
+   "websockets==17.3",
+   "xxhash==4.0.2",
+   "yfinance==1.7.0",
+   "zstandard==0.25.0",
+   "wrapt"
+  ],
+  "files": [
+   {
+    "name": "aiosqlite-0.22.1-py3-none-any.whl",
+    "size": 17405,
+    "sha256": "21c002eb13823fad740196c5a2e9d8e62f6243bd9e7e4a1f87fb5e44ecb4fceb"
+   },
+   {
+    "name": "annotated_doc-0.0.5-py3-none-any.whl",
+    "size": 5302,
+    "sha256": "117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101"
+   },
+   {
+    "name": "annotated_types-0.8.0-py3-none-any.whl",
+    "size": 13427,
+    "sha256": "f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0"
+   },
+   {
+    "name": "anthropic-2.3.0-py3-none-any.whl",
+    "size": 2216980,
+    "sha256": "aa6a3984f9276f307933d42dc6f58b6efc821a5ecafbc8d1bb5993a066767622"
+   },
+   {
+    "name": "anyio-4.15.1-py3-none-any.whl",
+    "size": 132079,
+    "sha256": "6152fdbbf9a77fdec97731721bebf7c4c44f7c29b424b0065826173efc7ed101"
+   },
+   {
+    "name": "attrs-26.1.0-py3-none-any.whl",
+    "size": 67548,
+    "sha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309"
+   },
+   {
+    "name": "beautifulsoup4-4.15.0-py3-none-any.whl",
+    "size": 109924,
+    "sha256": "d6f88de62e1d4e38ecb1077eb9724cd0eff29d2a08ca16a401e9b9e93f117cf9"
+   },
+   {
+    "name": "certifi-2026.10.23-py3-none-any.whl",
+    "size": 135082,
+    "sha256": "e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1"
+   },
+   {
+    "name": "cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 221822,
+    "sha256": "c1453022f490d2459a11819d83ad1d586e9ff65a12ac3e705ffebd46d3685dcf"
+   },
+   {
+    "name": "charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 257601,
+    "sha256": "3d31298449090ab8d47b7b1b2a555ff73cac7ed438a08b7ac160980c7ebed649"
+   },
+   {
+    "name": "cryptography-50.0.2-cp311-abi3-manylinux_2_28_x86_64.whl",
+    "size": 4753050,
+    "sha256": "4061c0079120205fb760c58acab6443e217307dcf05e3702cf970e0689972856"
+   },
+   {
+    "name": "curl_cffi-0.17.0-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 14053278,
+    "sha256": "af0782d5e340b65fd76701630f0284a8f8243d77df5f2637efd09a4b009f4e24"
+   },
+   {
+    "name": "distro-1.9.0-py3-none-any.whl",
+    "size": 20277,
+    "sha256": "7bffd925d65168f85027d8da9af6bddab658135b840670a223589bc0c8ef02b2"
+   },
+   {
+    "name": "docstring_parser-0.18.0-py3-none-any.whl",
+    "size": 22484,
+    "sha256": "b3fcbed555c47d8479be0796ef7e19c2670d428d72e96da63f3a40122860374b"
+   },
+   {
+    "name": "filetype-1.2.0-py2.py3-none-any.whl",
+    "size": 19970,
+    "sha256": "7ce71b6880181241cf7ac8697a2f1eb6a8bd9b429f7ad6d27b8db9ba5f1c2d25"
+   },
+   {
+    "name": "google_auth-2.62.0-py3-none-any.whl",
+    "size": 267911,
+    "sha256": "4ff4319aeb4ad128409759d397a9fcafad126d0031d241cc0dd6b9a00b43e3f3"
+   },
+   {
+    "name": "google_genai-2.34.0-py3-none-any.whl",
+    "size": 1258155,
+    "sha256": "a4cb02aebc4c357f863d2938132f0e3f7967fc5e00b8a4078673f68aad340665"
+   },
+   {
+    "name": "h11-0.16.0-py3-none-any.whl",
+    "size": 37515,
+    "sha256": "63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86"
+   },
+   {
+    "name": "httpcore-1.0.9-py3-none-any.whl",
+    "size": 78784,
+    "sha256": "2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55"
+   },
+   {
+    "name": "httpcore2-2.16.0-py3-none-any.whl",
+    "size": 85070,
+    "sha256": "5c4358319f2602d984ad93182c9fee5160f22e9da7babdda870a5e7c4e2dc34f"
+   },
+   {
+    "name": "httpx-0.28.1-py3-none-any.whl",
+    "size": 73517,
+    "sha256": "d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad"
+   },
+   {
+    "name": "httpx2-2.16.0-py3-none-any.whl",
+    "size": 97880,
+    "sha256": "fd2c5d7909e8d86fe92d53020c310ca0e4e431b838c207c5754b9bbf0308d49a"
+   },
+   {
+    "name": "idna-3.20-py3-none-any.whl",
+    "size": 69583,
+    "sha256": "ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c"
+   },
+   {
+    "name": "iniconfig-2.3.1-py3-none-any.whl",
+    "size": 7552,
+    "sha256": "9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7"
+   },
+   {
+    "name": "jiter-0.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 336286,
+    "sha256": "b3c741e6b778c951a6861964ee475118812a33208426c54fb92bf4e318bda834"
+   },
+   {
+    "name": "jsonpatch-1.38-py3-none-any.whl",
+    "size": 17440,
+    "sha256": "46260c5df952abd4734a098f94512dc00bc38539152ac3ef069ed0475e4f5695"
+   },
+   {
+    "name": "jsonpointer-3.6-py3-none-any.whl",
+    "size": 9333,
+    "sha256": "a45c858f8a9e171f6b3790ed9446c9382782f6c4cb4589176813c5a553f4cfcd"
+   },
+   {
+    "name": "langchain_anthropic-1.7.7-py3-none-any.whl",
+    "size": 65543,
+    "sha256": "ad6a82f53bd77f09e83bdb87f41d0b57843a41c995c735a7ab34626c1124ab63"
+   },
+   {
+    "name": "langchain_core-1.7.3-py3-none-any.whl",
+    "size": 577074,
+    "sha256": "460c214bf31495d7b7e0a879e408dbfda677fd53fd879da786c1b966a4f6bff6"
+   },
+   {
+    "name": "langchain_google_genai-4.4.2-py3-none-any.whl",
+    "size": 81915,
+    "sha256": "db68bd24e5372b2688f6902e47521a6802bfecc36e2d5bbff14076f8cbb26c83"
+   },
+   {
+    "name": "langchain_openai-1.7.3-py3-none-any.whl",
+    "size": 146342,
+    "sha256": "0ab77cc4579b87c50823b7ccb5d8af48d6c6ae2084f156dcdc37151fcc0717e6"
+   },
+   {
+    "name": "langchain_protocol-0.0.20-py3-none-any.whl",
+    "size": 7347,
+    "sha256": "3c935e5e46b0f6f9cb52f45ba7cfa53d1b9fa80c82c4a277d47f03e07f7385b1"
+   },
+   {
+    "name": "langgraph-1.2.18-py3-none-any.whl",
+    "size": 260837,
+    "sha256": "f430f28ea7fbc129c3cf7dc31c19c33dc27d93aeebd25c6d64fd5c1bad93d27d"
+   },
+   {
+    "name": "langgraph_checkpoint-4.3.1-py3-none-any.whl",
+    "size": 58093,
+    "sha256": "215a826935c8db4d9676e79fd95943e5b3847d78604390898e1d98581cc594e5"
+   },
+   {
+    "name": "langgraph_checkpoint_sqlite-3.1.2-py3-none-any.whl",
+    "size": 41844,
+    "sha256": "249640b84efd4872585a9ce596a63c2593e543f748341791591aeaf4c878329c"
+   },
+   {
+    "name": "langgraph_prebuilt-1.1.1-py3-none-any.whl",
+    "size": 42254,
+    "sha256": "fae17c22562e501940eb7aa052a15c58a431febbabf33f8ad172e1b44354a7e4"
+   },
+   {
+    "name": "langgraph_sdk-0.4.10-py3-none-any.whl",
+    "size": 167854,
+    "sha256": "306ede340814e79332812e3b5a8bda2587a09657c95e14e5c7af3370e06c22fe"
+   },
+   {
+    "name": "langsmith-0.14.16-py3-none-any.whl",
+    "size": 933680,
+    "sha256": "b9ea1a57622b0788b181d78605f974fb206c5f6f75793076ffec23cef4d904c8"
+   },
+   {
+    "name": "lxml-6.1.3-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 5244675,
+    "sha256": "909f4e927bb051f7740d6367285fc60cdcfdaf0258c2dba4ff5ba7eadadc250c"
+   },
+   {
+    "name": "markdown_it_py-4.2.0-py3-none-any.whl",
+    "size": 91687,
+    "sha256": "9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a"
+   },
+   {
+    "name": "mdurl-0.1.2-py3-none-any.whl",
+    "size": 9979,
+    "sha256": "84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8"
+   },
+   {
+    "name": "multitasking-0.0.13-py3-none-any.whl",
+    "size": 16380,
+    "sha256": "ec9243af140c67bfe52dc98d7173c294512735a88e8425c458b250db99dc2b48"
+   },
+   {
+    "name": "numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 16727283,
+    "sha256": "fbde6962867ee75b48b0ee29b2b9372ec5d617799dbaf38e82dc0596f2f7738a"
+   },
+   {
+    "name": "openai-3.41.0-py3-none-any.whl",
+    "size": 2380171,
+    "sha256": "7060a74b239609b21f2919eb98807a8aad463b4f510b8b3b388b15559360b0a8"
+   },
+   {
+    "name": "opentelemetry_api-1.45.2-py3-none-any.whl",
+    "size": 60335,
+    "sha256": "2cbd737377e710ee740d261c94e93fa0f08e6d037c18f17513cc0a2d94479a34"
+   },
+   {
+    "name": "orjson-3.13.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 130612,
+    "sha256": "bceadfd314bd238f584fc229a4bbaf0e573597e7a026dec5429fbf29fd66c641"
+   },
+   {
+    "name": "ormsgpack-1.13.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 254913,
+    "sha256": "8187048ec7b9ec628f985954e2409248acfeb8732e2751305649eaaba7304db7"
+   },
+   {
+    "name": "packaging-26.3-py3-none-any.whl",
+    "size": 129956,
+    "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+   },
+   {
+    "name": "pandas-3.1.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 12019688,
+    "sha256": "9433b5dc2f26ef9d9b56daaf4d41d078bf4372c5d88c42ed5b397a6eea80de16"
+   },
+   {
+    "name": "peewee-4.5.3-py3-none-any.whl",
+    "size": 194532,
+    "sha256": "4c5db9d2a3c4ae9a5725b229c29af51dbd063193f3a6c03b837974a90e44548c"
+   },
+   {
+    "name": "platformdirs-4.14.0-py3-none-any.whl",
+    "size": 35259,
+    "sha256": "1dadfc59a8a5d7565b3d9270ae8fa71c065595352c4277b41c11ee6c222c4b91"
+   },
+   {
+    "name": "pluggy-1.7.0-py3-none-any.whl",
+    "size": 27082,
+    "sha256": "7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec"
+   },
+   {
+    "name": "prompt_toolkit-3.0.53-py3-none-any.whl",
+    "size": 392288,
+    "sha256": "01c0891d7f9237d5e339f7d3e42cdae80b7534abb1c7c0e3352efba6231492f2"
+   },
+   {
+    "name": "protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl",
+    "size": 343223,
+    "sha256": "89f23aa53c24553a2416fd4fd1ec06f74fa42b14b546d8883128813f775bbfd2"
+   },
+   {
+    "name": "pyasn1-0.6.5-py3-none-any.whl",
+    "size": 84807,
+    "sha256": "4017b0fce125096b8573b39c989fdb1a4b19cf761e683398184550fea0e66587"
+   },
+   {
+    "name": "pyasn1_modules-0.4.2-py3-none-any.whl",
+    "size": 181259,
+    "sha256": "29253a9207ce32b64c3ac6600edc75368f98473906e8fd1043bd6b5b1de2c14a"
+   },
+   {
+    "name": "pycparser-3.12-py3-none-any.whl",
+    "size": 62600,
+    "sha256": "a076f3f489b39b43ed13563a1dafe42447445bec2e294154ec5c57fcdda4c85e"
+   },
+   {
+    "name": "pydantic-2.14.2-py3-none-any.whl",
+    "size": 490403,
+    "sha256": "7efbf7507b937931cd32a5755acb00ea1cf5ccb1d4e8067a5850d5069e382118"
+   },
+   {
+    "name": "pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 2242782,
+    "sha256": "9667637665acba166a7dbbc786f14c50512d3a01f7199e0e1a13b929e92d7c7a"
+   },
+   {
+    "name": "pygments-2.21.0-py3-none-any.whl",
+    "size": 1250147,
+    "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9"
+   },
+   {
+    "name": "pytest-9.2.0-py3-none-any.whl",
+    "size": 411776,
+    "sha256": "07acdcf88ec174f907dc01af70bf52d49b014bbab03faeeade31c96b18c2e588"
+   },
+   {
+    "name": "pytest_subtests-0.15.0-py3-none-any.whl",
+    "size": 9185,
+    "sha256": "da2d0ce348e1f8d831d5a40d81e3aeac439fec50bd5251cbb7791402696a9493"
+   },
+   {
+    "name": "python_dateutil-3.0.0-py2.py3-none-any.whl",
+    "size": 94659,
+    "sha256": "3c79630202e4152c6add678446984236efe4f57e84d8e892aab0637bab82e9fd"
+   },
+   {
+    "name": "python_dotenv-1.2.4-py3-none-any.whl",
+    "size": 23266,
+    "sha256": "42269a8a5b3fd54ffa6f3d84b18abed50064717576b4ecf03dc4a55d8aa04fdc"
+   },
+   {
+    "name": "pytz-2026.6-py2.py3-none-any.whl",
+    "size": 506321,
+    "sha256": "7fed3fee8fd6bd4a2b7b75a8d56021d0624127bf69bd5691f115db929ac570b3"
+   },
+   {
+    "name": "pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 807870,
+    "sha256": "ba1cc08a7ccde2d2ec775841541641e4548226580ab850948cbfda66a1befcdc"
+   },
+   {
+    "name": "questionary-2.1.1-py3-none-any.whl",
+    "size": 36753,
+    "sha256": "a51af13f345f1cdea62347589fbb6df3b290306ab8930713bfae4d475a7d4a59"
+   },
+   {
+    "name": "regex-2026.9.29-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 807783,
+    "sha256": "39ab5894d971f9ac68baa6eca5c50387db579cfcacf36ae8df3feceb1815e6d0"
+   },
+   {
+    "name": "requests-2.34.2-py3-none-any.whl",
+    "size": 73075,
+    "sha256": "2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0"
+   },
+   {
+    "name": "requests_toolbelt-1.0.0-py2.py3-none-any.whl",
+    "size": 54481,
+    "sha256": "cccfdd665f0a24fcf4726e690f65639d272bb0637b9b92dfd91a5568ccf6bd06"
+   },
+   {
+    "name": "rich-15.0.0-py3-none-any.whl",
+    "size": 310654,
+    "sha256": "33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb"
+   },
+   {
+    "name": "ruff-0.17.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 10577491,
+    "sha256": "7fa4b0f931cdbcb8a52044f370a3eb429fb42eb88807b0e800fcaa98dd42b24e"
+   },
+   {
+    "name": "shellingham-1.5.4-py2.py3-none-any.whl",
+    "size": 9755,
+    "sha256": "7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686"
+   },
+   {
+    "name": "six-1.17.0-py2.py3-none-any.whl",
+    "size": 11050,
+    "sha256": "4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"
+   },
+   {
+    "name": "sniffio-1.3.1-py3-none-any.whl",
+    "size": 10235,
+    "sha256": "2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"
+   },
+   {
+    "name": "soupsieve-3.0.4-py3-none-any.whl",
+    "size": 42458,
+    "sha256": "8412826614f9c632227067d0985aeb9f584bd15efc852955430e097a9fe7afbf"
+   },
+   {
+    "name": "sqlite_vec-0.1.9-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux1_x86_64.whl",
+    "size": 163388,
+    "sha256": "1515727990b49e79bcaf75fdee2ffc7d461f8b66905013231251f1c8938e7786"
+   },
+   {
+    "name": "stockstats-0.6.10-py3-none-any.whl",
+    "size": 35001,
+    "sha256": "51fc17fec0c4377edfc114a4a59051d27f49b44d791b292cefc34e04e4011c65"
+   },
+   {
+    "name": "tenacity-9.1.4-py3-none-any.whl",
+    "size": 28926,
+    "sha256": "6095a360c919085f28c6527de529e76a06ad89b23659fa881ae0649b867a9d55"
+   },
+   {
+    "name": "tiktoken-0.14.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+    "size": 1204197,
+    "sha256": "7896eea257fe497a2b7134474d909156c6744ce8da35bce88011a960e008aa0d"
+   },
+   {
+    "name": "truststore-0.10.5-py3-none-any.whl",
+    "size": 19017,
+    "sha256": "9aaaedaefaf06d8b206278cf8b5012bc897f485a874503501e12d776df78951c"
+   },
+   {
+    "name": "typer-0.27.3-py3-none-any.whl",
+    "size": 123312,
+    "sha256": "e50022f28b82a86313e54501317a1db64bf8f8d036ff8cfe5ca7e47675454aff"
+   },
+   {
+    "name": "typing_extensions-4.16.0-py3-none-any.whl",
+    "size": 45571,
+    "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+   },
+   {
+    "name": "typing_inspection-0.4.4-py3-none-any.whl",
+    "size": 14750,
+    "sha256": "65b8397ba37ccbce054456aaccddfc91e6e3083c92824df348d96ca832f3f147"
+   },
+   {
+    "name": "tzdata-2026.6-py2.py3-none-any.whl",
+    "size": 348210,
+    "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec"
+   },
+   {
+    "name": "urllib3-2.8.0-py3-none-any.whl",
+    "size": 135717,
+    "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3"
+   },
+   {
+    "name": "uuid_utils-0.19.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 330342,
+    "sha256": "b8060530a8fa27f11947489c79bc36e6ebb465b2d714945364dc397283309417"
+   },
+   {
+    "name": "wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 785946,
+    "sha256": "b185c8b927b23af2721be1783499d1cfa5c028b098b0858951b4ae224477f1c2"
+   },
+   {
+    "name": "websockets-17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl",
+    "size": 225795,
+    "sha256": "a7f391838e8adcf1f2fe71561d9e5a9f74ea7ffa5052eb2db329aac677383136"
+   },
+   {
+    "name": "wrapt-2.5.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl",
+    "size": 250614,
+    "sha256": "092472b7b1494deef40dac5e9f6295013a9d51b112b5fbc4350f64dc2574e46a"
+   },
+   {
+    "name": "xxhash-4.0.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+    "size": 261797,
+    "sha256": "7c7c95dba490be3b4e5a2fa5595b4d4f088fe7b8726e5998b8c1d83b1f9eb3e4"
+   },
+   {
+    "name": "yfinance-1.7.0-py3-none-any.whl",
+    "size": 149341,
+    "sha256": "91281ecd1f71069a37155ff8653aff2d3085f3492bd8721f18b70955da62911a"
+   },
+   {
+    "name": "zstandard-0.25.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "size": 5546993,
+    "sha256": "5a56ba0db2d244117ed744dfa8f6f5b366e14148e00de44723413b2f3938a902"
+   }
+  ]
+ },
+ "sources": {
+  "finswe21": {
+   "repo": "https://github.com/TauricResearch/TradingAgents",
+   "base": "e8f5503e9b86d5c2710b0c76b1f686703968c9df",
+   "fix": "a5b0f217e35b50286ef8a69875f2ffceacea1657"
+  },
+  "core_task_bases": {
+   "FSC-001-core-guard": "28f434b31923de002702a42e44fff6c3b4ea04b1",
+   "FSC-002-covered-call": "40daff3915faaebdc5e35d107f252e0c53194757",
+   "FSC-003-income-etf-run": "fe5c1c87162c24cb0cccdfbbaab270b526e5753c",
+   "FSC-004-income-etf-monitor": "f601fd0afd055392bab34814e3fc9783adfd93f6",
+   "FSC-005-report-snapshot": "2e12a4a211f994c4e0a13433df28651b54630750",
+   "FSC-006-regular-hours": "cf2e167dce473982d9f3546ef75ac70dbcee729e",
+   "FSC-007-nxt-session": "09b028de8ed23a1a3c8e74e048f6d8b9cf79f86f",
+   "FSC-009-hybrid-veto": "1763a2c5e4df605e0d949a524094da05644fc725",
+   "FSC-014-candle-cap": "2609b5de32d62d45dcf88b69067429b55bec0517",
+   "FSC-015-stress-proxy": "40daff3915faaebdc5e35d107f252e0c53194757",
+   "FSC-C01-ctrlc-exit": "b4cb5759fd370b88df88c4f467e42542e895c303",
+   "FSC-C02-monitor-network": "0ba0b78fa57c83c926fde36487373f014fc66869",
+   "FSC-C03-closed-log": "7bf3358639531564dbfa92430ce952155d155d36",
+   "INJ-01-backtest-lookahead": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+   "INJ-02-backtest-sell-fee": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+   "INJ-03-future-news": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+   "INJ-04-revalidate-window": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+   "INJ-05-accumulate-atr-floor": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+   "INJ-06-takeprofit-rebuy": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+   "INJ-07-priced-in-sign": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148"
+  },
+  "core_uv_lock_sha256": "59854f6b77d87cf19cc21d26dc5fbb7698f8aa11c159b9f72bbbeaa4bcf08300"
+ }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FSC-C02-monitor-network",
+  "base": "0ba0b78fa57c83c926fde36487373f014fc66869",
+  "fix": "d6d3fbc16661490e73c54984b29f8ca9e5c0ceb3",
+  "family": "control",
+  "provenance": "incident-ops",
+  "incident_date": "2026-06",
+  "invariant": "The monitor loop survives a transient network error (warn and retry). No domain invariant."
+}

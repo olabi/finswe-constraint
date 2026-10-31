@@ -1,0 +1,37 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index e4de7a3..4767c0d 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -633,3 +633,14 @@ def test_invest_ratio_sizes_from_balance_ignoring_atr(make_config, tmp_path):
+     pos = paper.position("005930")
+     # 잔액 1,000,000 × 0.9 = 900,000, 가격 116 → 900000//116 = 7758주 (ATR 캡 있었으면 훨씬 적었을 것)
+     assert pos is not None and pos.quantity == 900_000 // 116
++
++
++def test_rule_for_income_etf_consistent_snapshot(make_config, tmp_path):
++    # _rule_for: 인컴 ETF 는 완화 신호(추세진입 안 함) — report_once/step_symbol 일관
++    from ai_trader.strategy import Bars
++    engine, _ = build_engine(make_config, tmp_path, GOLDEN_CROSS_CLOSES, mode="rule")
++    bars = Bars.from_closes([100.0] * 60 + [110.0])
++    r_etf = engine._rule_for("JEPQ", bars, None)
++    assert r_etf.action == "HOLD" and "인컴 ETF" in r_etf.reasons[0]
++    r_stk = engine._rule_for("005930", bars, None)  # 일반주는 전략 신호
++    assert r_stk.action in ("BUY", "HOLD")
+diff --git a/tests/test_strategy.py b/tests/test_strategy.py
+index cf79053..c162b44 100644
+--- a/tests/test_strategy.py
++++ b/tests/test_strategy.py
+@@ -234,3 +234,13 @@ def test_make_strategy_vcp_flag():
+     from ai_trader.strategy import QuantStrategy
+     s = make_strategy("quant", vcp=True)
+     assert isinstance(s, QuantStrategy) and s.enable_vcp is True
++
++
++def test_emergency_stop_volatility_aware():
++    # 고변동(ATR≈10%) 포지션이 평단 -12.9%: 고정 -12%면 조기 비상손절, 3×ATR% 면 미발동(보유)
++    bars = make_bars([100.0] * 60 + [101.0], spread=5.0)  # 가격>EMA50(레짐 OK), 고ATR
++    pos = PositionView(quantity=5, avg_price=116.0)  # pnl ≈ -12.9%
++    fixed = QuantStrategy(emergency_atr_mult=0.0).evaluate(bars, pos)
++    assert fixed.action == "SELL" and "비상 손절" in fixed.reasons[0]
++    vol = QuantStrategy(emergency_atr_mult=3.0).evaluate(bars, pos)
++    assert vol.action == "HOLD"  # 변동성 비례라 조기청산 완화 → 보유

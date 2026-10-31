@@ -1,0 +1,9 @@
+{
+  "id": "FSC-C03-closed-log",
+  "base": "7bf3358639531564dbfa92430ce952155d155d36",
+  "fix": "5a663f90a35c5da678c337baf312cd7a6e8d73ff",
+  "family": "control",
+  "provenance": "incident-ops",
+  "incident_date": "2026-06",
+  "invariant": "A repeated closed-market log line is printed once, not every poll. No domain invariant."
+}

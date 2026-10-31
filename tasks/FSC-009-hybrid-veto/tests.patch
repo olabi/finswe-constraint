@@ -1,0 +1,30 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index c6cd33b..ec569e5 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -263,3 +263,25 @@ def test_report_once_runs_without_executing(make_config, tmp_path, capsys):
+     out = capsys.readouterr().out
+     assert "시작 현황" in out and "005930" in out
+     assert paper.position("005930") is None  # 리포트는 집행하지 않음
++
++
++def test_hybrid_weak_ai_objection_executes_rule(make_config, tmp_path):
++    # decisions.jsonl 재현: 룰 BUY(풀백) + AI HOLD@0.32 (저확신) → 거부 아님, 룰 주도 집행
++    weak = FakeAdvisor(AdvisorDecision("HOLD", 0.32, "MACD 음수라 약세", 0.1))
++    engine, paper = build_engine(make_config, tmp_path, GOLDEN_CROSS_CLOSES, mode="hybrid", advisor=weak)
++    engine.run(max_polls=1)
++    rec = json.loads(Path(tmp_path / "decisions.jsonl").read_text().splitlines()[-1])
++    assert rec["final"] == "BUY" and rec["executed"] is True
++    # (relaxed) note wording is not scored
++    assert paper.position("005930") is not None
++
++
++def test_hybrid_confident_ai_veto_blocks(make_config, tmp_path):
++    # 고확신 반대(0.7 ≥ 0.6)는 여전히 거부권 유지
++    strong = FakeAdvisor(AdvisorDecision("HOLD", 0.7, "확신 있는 반대", 0.1))
++    engine, paper = build_engine(make_config, tmp_path, GOLDEN_CROSS_CLOSES, mode="hybrid", advisor=strong)
++    engine.run(max_polls=1)
++    rec = json.loads(Path(tmp_path / "decisions.jsonl").read_text().splitlines()[-1])
++    assert rec["final"] == "HOLD" and rec["executed"] is False
++    assert "AI 거부" in rec["note"]
++    assert paper.position("005930") is None

@@ -1,0 +1,152 @@
+[
+ {
+  "kind": "high",
+  "week_end": "2022-05-06",
+  "day": "2022-05-04",
+  "qqq": 330.29,
+  "jepq_close": 51.1,
+  "jepq_pivot_week_offset": 0,
+  "move_to_next_pivot": -0.1118,
+  "confirmed": true
+ },
+ {
+  "kind": "low",
+  "week_end": "2022-06-17",
+  "day": "2022-06-16",
+  "qqq": 269.28,
+  "jepq_close": 44.06,
+  "jepq_pivot_week_offset": 0,
+  "move_to_next_pivot": 0.2028,
+  "confirmed": true
+ },
+ {
+  "kind": "high",
+  "week_end": "2022-08-12",
+  "day": "2022-08-12",
+  "qqq": 330.59,
+  "jepq_close": 49.78,
+  "jepq_pivot_week_offset": 1,
+  "move_to_next_pivot": -0.2108,
+  "confirmed": true
+ },
+ {
+  "kind": "low",
+  "week_end": "2022-10-14",
+  "day": "2022-10-13",
+  "qqq": 254.26,
+  "jepq_close": 41.66,
+  "jepq_pivot_week_offset": 0,
+  "move_to_next_pivot": 0.122,
+  "confirmed": true
+ },
+ {
+  "kind": "high",
+  "week_end": "2022-12-02",
+  "day": "2022-12-01",
+  "qqq": 295.75,
+  "jepq_close": 44.06,
+  "jepq_pivot_week_offset": 2,
+  "move_to_next_pivot": -0.0898,
+  "confirmed": true
+ },
+ {
+  "kind": "low",
+  "week_end": "2022-12-30",
+  "day": "2022-12-28",
+  "qqq": 259.73,
+  "jepq_close": 40.5,
+  "jepq_pivot_week_offset": 1,
+  "move_to_next_pivot": 0.4401,
+  "confirmed": true
+ },
+ {
+  "kind": "high",
+  "week_end": "2023-07-28",
+  "day": "2023-07-27",
+  "qqq": 384.71,
+  "jepq_close": 48.93,
+  "jepq_pivot_week_offset": 1,
+  "move_to_next_pivot": -0.0995,
+  "confirmed": true
+ },
+ {
+  "kind": "low",
+  "week_end": "2023-10-27",
+  "day": "2023-10-26",
+  "qqq": 342.35,
+  "jepq_close": 45.1,
+  "jepq_pivot_week_offset": 0,
+  "move_to_next_pivot": 0.4369,
+  "confirmed": true
+ },
+ {
+  "kind": "high",
+  "week_end": "2024-07-05",
+  "day": "2024-07-05",
+  "qqq": 496.6,
+  "jepq_close": 55.88,
+  "jepq_pivot_week_offset": 1,
+  "move_to_next_pivot": -0.0957,
+  "confirmed": true
+ },
+ {
+  "kind": "low",
+  "week_end": "2024-09-06",
+  "day": "2024-09-06",
+  "qqq": 448.19,
+  "jepq_close": 51.36,
+  "jepq_pivot_week_offset": 0,
+  "move_to_next_pivot": 0.1994,
+  "confirmed": true
+ },
+ {
+  "kind": "high",
+  "week_end": "2025-02-14",
+  "day": "2025-02-14",
+  "qqq": 538.84,
+  "jepq_close": 58.27,
+  "jepq_pivot_week_offset": 1,
+  "move_to_next_pivot": -0.2146,
+  "confirmed": true
+ },
+ {
+  "kind": "low",
+  "week_end": "2025-04-04",
+  "day": "2025-04-04",
+  "qqq": 422.67,
+  "jepq_close": 46.6,
+  "jepq_pivot_week_offset": 1,
+  "move_to_next_pivot": 0.4883,
+  "confirmed": true
+ },
+ {
+  "kind": "high",
+  "week_end": "2025-10-31",
+  "day": "2025-10-29",
+  "qqq": 637.01,
+  "jepq_close": 59.22,
+  "jepq_pivot_week_offset": 0,
+  "move_to_next_pivot": -0.1057,
+  "confirmed": true
+ },
+ {
+  "kind": "low",
+  "week_end": "2026-03-27",
+  "day": "2026-03-27",
+  "qqq": 561.57,
+  "jepq_close": 54.13,
+  "jepq_pivot_week_offset": 1,
+  "move_to_next_pivot": 0.3344,
+  "confirmed": true
+ },
+ {
+  "kind": "high",
+  "week_end": "2026-10-02",
+  "day": "2026-10-02",
+  "qqq": 754.53,
+  "jepq_close": 61.03,
+  "jepq_pivot_week_offset": 0,
+  "move_to_next_pivot": null,
+  "confirmed": false
+ }
+]

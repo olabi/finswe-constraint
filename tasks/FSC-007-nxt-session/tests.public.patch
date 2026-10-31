@@ -1,0 +1,52 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index f8d4f3c..9b90d52 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -176,13 +176,16 @@ from conftest import GOLDEN_CROSS_CLOSES as _GC  # noqa: E402
+ from test_market import KR_CAL  # noqa: E402
+ 
+ 
+-def market_transport_with_calendar(closes, calendar):
++def market_transport_with_calendar(closes, calendar, nxt=True):
+     def handler(request: httpx.Request) -> httpx.Response:
+         path = request.url.path
+         if path == "/oauth2/token":
+             return httpx.Response(200, json={"access_token": "t", "token_type": "Bearer", "expires_in": 86400})
+         if path.startswith("/api/v1/market-calendar/"):
+             return ok(calendar)
++        if path == "/api/v1/stocks":
++            return ok([{"symbol": request.url.params["symbols"], "name": "테스트",
++                        "koreanMarketDetail": {"nxtSupported": nxt}}])
+         if path == "/api/v1/candles":
+             return ok(candles_payload(closes))
+         if path == "/api/v1/prices":
+@@ -512,9 +515,9 @@ def test_limit_price_tick_rounding():
+ from test_market import KR_CAL as _KRCAL  # noqa: E402
+ 
+ 
+-def _engine_regular(make_config, tmp_path, regular_only: bool):
++def _engine_regular(make_config, tmp_path, regular_only: bool, nxt: bool = True):
+     cfg = make_config()
+-    client = TossClient(cfg, transport=market_transport_with_calendar(_GC, _KRCAL))
++    client = TossClient(cfg, transport=market_transport_with_calendar(_GC, _KRCAL, nxt=nxt))
+     return TradingEngine(
+         client=client, broker=PaperBrokerAdapter(PaperBroker(tmp_path / "p.json")),
+         risk=RiskManager(max_order_krw=cfg.max_order_krw, max_daily_orders=cfg.max_daily_orders,
+@@ -531,7 +534,15 @@ def test_regular_hours_only_filters_extended_sessions(make_config, tmp_path):
+     assert labels == {"regularMarket"}  # 시간외(pre/after) 제외 → 15:30 후 휴장 처리
+ 
+ 
+-def test_include_extended_hours_keeps_all_sessions(make_config, tmp_path):
+-    eng = _engine_regular(make_config, tmp_path, regular_only=False)
++def test_extended_hours_kept_for_nxt_supported_stock(make_config, tmp_path):
++    # 시간외 옵트인 + NXT 지원 종목 → 전 세션 유지
++    eng = _engine_regular(make_config, tmp_path, regular_only=False, nxt=True)
+     labels = {s[2] for s in eng._sessions_for("005930")}
+     assert "preMarket" in labels and "afterMarket" in labels and "regularMarket" in labels
++
++
++def test_non_nxt_stock_forced_regular_even_with_extended(make_config, tmp_path):
++    # 시간외 옵트인이어도 NXT 미지원 종목(예: 005935 우선주)은 강제 정규장만
++    eng = _engine_regular(make_config, tmp_path, regular_only=False, nxt=False)
++    labels = {s[2] for s in eng._sessions_for("005935")}
++    assert labels == {"regularMarket"}

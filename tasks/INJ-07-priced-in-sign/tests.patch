@@ -1,0 +1,59 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index 379e4ac..83fc131 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -1088,3 +1088,14 @@ def test_report_once_applies_ignore_holdings(make_config, tmp_path, capsys):
+     _engine_with_broker(make_config, tmp_path, GOLDEN_CROSS_CLOSES, broker, 1).report_once()
+     out = capsys.readouterr().out
+     assert "보유 1주" in out and "골든크로스" in out
++
++
++def test_snapshot_attaches_news_priced_in_label(make_config, tmp_path):
++    # 악재 + 상승장 → derived 에 '아직 미반영' 라벨이 실려 AI 가 부호를 직접 안 따지게.
++    from ai_trader.strategy import Bars
++
++    engine, _ = build_engine(make_config, tmp_path, GOLDEN_CROSS_CLOSES)
++    bars = Bars.from_closes([100.0 + i * 0.5 for i in range(80)])  # 우상향 → change_3 양수
++    snap = engine._snapshot(bars, None, "005935", news=["[악재] 하락 마감 · 1일전"])
++    assert "아직 미반영" in snap["derived"]["news_priced_in"]
++
+diff --git a/tests/test_finswe_inj07.py b/tests/test_finswe_inj07.py
+new file mode 100644
+index 0000000..fa78367
+--- /dev/null
++++ b/tests/test_finswe_inj07.py
+@@ -0,0 +1,18 @@
++from ai_trader.news import priced_in_label, tone_counts
++
++
++def _neg_headlines():
++    heads = ["실적 쇼크 적자 전환", "대규모 리콜 악재", "규제 조사 착수 악재"]
++    pos, neg = tone_counts(heads)
++    assert neg > pos  # sanity: the fixture is negative-dominant
++    return heads
++
++
++def test_rally_does_not_absorb_bad_news():
++    label = priced_in_label(_neg_headlines(), 0.19)
++    assert label is not None and "이미 반영" not in label
++
++
++def test_drop_absorbs_bad_news():
++    label = priced_in_label(_neg_headlines(), -0.08)
++    assert label is not None and "이미 반영" in label
+diff --git a/tests/test_news.py b/tests/test_news.py
+index 752a757..4af3dfb 100644
+--- a/tests/test_news.py
++++ b/tests/test_news.py
+@@ -225,3 +225,11 @@ def test_explicit_sentiment_prefix_still_respected_for_real_news():
+     # 가격보도가 아닌 진짜 뉴스는 종전대로 명시 접두사를 존중한다
+     assert _label_of("[악재] 대형 수주 체결 · 방금") == "악재"  # 키워드와 달라도 접두사 우선
+     assert tone_counts(["[호재] 규제당국 조사 착수 · 방금"]) == (1, 0)
++
++
++def test_priced_in_negative_news_with_price_up_is_not_absorbed():
++    # 005935 회귀: 악재 2건 + change +19.5% → '아직 미반영·신중' 이어야 한다
++    label = priced_in_label(["[악재] a · 1일전", "[악재] b · 18시간전"], 0.195)
++    assert "아직 미반영" in label and "신중" in label
++    assert "이미 반영됨" not in label
++

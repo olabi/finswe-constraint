@@ -1,0 +1,10 @@
+{
+  "id": "INJ-04-revalidate-window",
+  "base": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "fix": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "family": "temporal",
+  "provenance": "dev-found-reconstructed",
+  "invariant": "An A/B edge comparison evaluates both variants over the same bar window.",
+  "handwritten": true,
+  "bug_patch_withheld": true
+}

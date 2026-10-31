@@ -1,0 +1,45 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index efdb511..6568caf 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -1013,3 +1013,40 @@ def test_report_once_applies_ignore_holdings(make_config, tmp_path, capsys):
+     _engine_with_broker(make_config, tmp_path, GOLDEN_CROSS_CLOSES, broker, 1).report_once()
+     out = capsys.readouterr().out
+     assert "보유 1주" in out and "골든크로스" in out
++
++
++def test_take_profit_blocks_rebuy_above_sell_price(make_config, tmp_path):
++    # churn 방지: 익절 직후 매집 룰이 미보유를 보고 즉시 되사면 왕복 수수료만 낸다.
++    from ai_trader.strategy import Bars
++
++    engine = _tp_engine(make_config, tmp_path, take_profit_pct=0.20, take_profit_rebuy_buffer=0.01)
++    pos = PositionView(quantity=1.0, avg_price=100.0)
++    assert engine._rule_for("005930", Bars.from_closes([100.0] * 60 + [125.0]), pos).action == "SELL"
++
++    # 매도가 125 → 123.75(−1%) 이하로 와야 재매수. 그 위에서는 대기.
++    hold = engine._rule_for("005930", Bars.from_closes([100.0] * 60 + [124.0]), None)
++    assert hold.action == "HOLD"
++
++    buy = engine._rule_for("005930", Bars.from_closes([100.0] * 60 + [123.0]), None)
++    assert buy.action == "BUY"  # 매집 룰로 복귀
++
++
++def test_take_profit_rebuy_block_is_same_day_only(make_config, tmp_path):
++    # 차단은 '당일' 한정 — 다음 날이면 가격이 매도가 위여도 매집 룰로 복귀한다.
++    # (무기한 차단은 되사지 않는 것에 수렴해 검증상 훨씬 나쁨: +11.7% vs +30.2%)
++    from ai_trader.strategy import Bars
++
++    engine = _tp_engine(make_config, tmp_path, take_profit_pct=0.20, take_profit_rebuy_buffer=0.01)
++    pos = PositionView(quantity=1.0, avg_price=100.0)
++    assert engine._rule_for("005930", Bars.from_closes([100.0] * 60 + [125.0]), pos).action == "SELL"
++
++    above = Bars.from_closes([100.0] * 60 + [124.0])
++    blocked = engine._rule_for("005930", above, None)
++    assert blocked.action == "HOLD"
++
++    # 매도 기록의 날짜만 과거로 돌리면(= 다음 날) 같은 가격에서도 차단이 풀린다
++    _, sold_px = engine._take_profit_sold["005930"]
++    engine._take_profit_sold["005930"] = ("2000-01-01", sold_px)
++    assert engine._rule_for("005930", above, None).action == "BUY"
++    assert "005930" not in engine._take_profit_sold  # 기록도 정리된다
++

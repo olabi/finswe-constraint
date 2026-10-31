@@ -1,0 +1,10 @@
+{
+  "id": "INJ-01-backtest-lookahead",
+  "base": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "fix": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "family": "temporal",
+  "provenance": "injected",
+  "invariant": "A backtest signal computed at bar i may only see bars ≤ i; it fills at the open of bar i+1.",
+  "handwritten": true,
+  "bug_patch_withheld": true
+}

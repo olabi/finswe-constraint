@@ -1,0 +1,12 @@
+{
+  "id": "FSC-014-candle-cap",
+  "base": "2609b5de32d62d45dcf88b69067429b55bec0517",
+  "fix": "2609b5de32d62d45dcf88b69067429b55bec0517",
+  "family": "api-numerical",
+  "provenance": "incident-reconstructed",
+  "incident_date": "2026-07-09",
+  "invariant": "A single candles request must never ask for more than 200 bars (API maximum), while still fetching enough bars for the configured defense MA when possible.",
+  "handwritten": true,
+  "note": "Bug was fixed before commit; base re-injects it via bug.patch. Hidden test hand-written to mirror the real API (400 invalid-request above 200 bars).",
+  "bug_patch_withheld": true
+}

@@ -1,0 +1,38 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index 9afdca6..be10949 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -535,3 +535,33 @@ def test_live_other_error_does_not_fallback():
+ 
+     with pytest.raises(TossApiError):
+         LiveBrokerAdapter(Fake()).market_buy("005930", 1, D("310000"), "KRW")
++
++
++# ── 정규장만 vs 시간외 포함 (afterMarket 15:30 후 폴링 방지) ──────────
++
++from test_market import KR_CAL as _KRCAL  # noqa: E402
++
++
++def _engine_regular(make_config, tmp_path, regular_only: bool):
++    cfg = make_config()
++    client = TossClient(cfg, transport=market_transport_with_calendar(_GC, _KRCAL))
++    return TradingEngine(
++        client=client, broker=PaperBrokerAdapter(PaperBroker(tmp_path / "p.json")),
++        risk=RiskManager(max_order_krw=cfg.max_order_krw, max_daily_orders=cfg.max_daily_orders,
++                         min_confidence=cfg.min_confidence, cooldown_polls=cfg.cooldown_polls),
++        settings=EngineSettings(symbols=["005930"], mode="rule", interval="1d",
++                                regular_hours_only=regular_only, decisions_log=str(tmp_path / "d.jsonl")),
++        strategy=SmaRsiStrategy(),
++    )
++
++
++def test_regular_hours_only_filters_extended_sessions(make_config, tmp_path):
++    eng = _engine_regular(make_config, tmp_path, regular_only=True)
++    labels = {s[2] for s in eng._sessions_for("005930")}
++    assert labels == {"regularMarket"}  # 시간외(pre/after) 제외 → 15:30 후 휴장 처리
++
++
++def test_include_extended_hours_keeps_all_sessions(make_config, tmp_path):
++    eng = _engine_regular(make_config, tmp_path, regular_only=False)
++    labels = {s[2] for s in eng._sessions_for("005930")}
++    assert "preMarket" in labels and "afterMarket" in labels and "regularMarket" in labels

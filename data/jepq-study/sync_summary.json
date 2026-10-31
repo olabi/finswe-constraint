@@ -1,0 +1,183 @@
+{
+ "JEPQ": {
+  "index": "QQQ",
+  "overlap": "2022-05-04..2026-10-02 (1108 bars)",
+  "corr_daily_ex_exdates": 0.962,
+  "beta": 0.717,
+  "alpha_daily": 8e-05,
+  "r2": 0.925,
+  "rolling63_corr_min_med": [
+   0.882,
+   0.965
+  ],
+  "upside_capture": 0.728,
+  "downside_capture": 0.667,
+  "exday_etf_ret_mean": -0.0091,
+  "exday_idx_ret_mean": 0.0009,
+  "exday_residual_mean": -0.0098,
+  "ema50_regime_agreement": 0.948,
+  "ret20_sign_agreement": 0.948,
+  "exday_ema_crossings": [
+   {
+    "date": "2024-09-03",
+    "etf_ret": -0.030695332949418286,
+    "idx_ret": -0.030360912483744618,
+    "idx_above_ema50": false,
+    "etf_back_above_in_5d": false
+   },
+   {
+    "date": "2024-11-01",
+    "etf_ret": -0.0025651007630792533,
+    "idx_ret": 0.00739895944426161,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2024-12-31",
+    "etf_ret": -0.014852323622574715,
+    "idx_ret": -0.008494743099763613,
+    "idx_above_ema50": false,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2025-02-03",
+    "etf_ret": -0.0147903648993164,
+    "idx_ret": -0.008003202917216234,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2025-08-01",
+    "etf_ret": -0.02341192625324573,
+    "idx_ret": -0.019698774695034893,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2025-12-31",
+    "etf_ret": -0.016415657779629278,
+    "idx_ret": -0.008265655808932348,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2026-09-01",
+    "etf_ret": -0.020259070009511992,
+    "idx_ret": -0.012723917340435431,
+    "idx_above_ema50": false,
+    "etf_back_above_in_5d": true
+   }
+  ],
+  "cum_price": 0.194,
+  "cum_total": 0.959,
+  "cum_index": 1.277
+ },
+ "JEPI": {
+  "index": "SPY",
+  "overlap": "2020-05-21..2026-10-02 (1600 bars)",
+  "corr_daily_ex_exdates": 0.865,
+  "beta": 0.544,
+  "alpha_daily": 0.0001,
+  "r2": 0.748,
+  "rolling63_corr_min_med": [
+   0.333,
+   0.846
+  ],
+  "upside_capture": 0.616,
+  "downside_capture": 0.56,
+  "exday_etf_ret_mean": -0.0063,
+  "exday_idx_ret_mean": 0.002,
+  "exday_residual_mean": -0.0074,
+  "ema50_regime_agreement": 0.825,
+  "ret20_sign_agreement": 0.821,
+  "exday_ema_crossings": [
+   {
+    "date": "2020-10-01",
+    "etf_ret": -0.008381818780069494,
+    "idx_ret": 0.006420000007290261,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2023-02-01",
+    "etf_ret": -0.007751943315539189,
+    "idx_ret": 0.010627771821197785,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": false
+   },
+   {
+    "date": "2024-06-03",
+    "etf_ret": -0.011085712613350118,
+    "idx_ret": 0.0008153529396106585,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2024-07-01",
+    "etf_ret": -0.010056451865829819,
+    "idx_ret": 0.00205809454382333,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": false
+   },
+   {
+    "date": "2025-02-03",
+    "etf_ret": -0.00695268507588509,
+    "idx_ret": -0.006729566554251942,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2025-03-03",
+    "etf_ret": -0.012119192434815185,
+    "idx_ret": -0.017519898469909534,
+    "idx_above_ema50": false,
+    "etf_back_above_in_5d": false
+   },
+   {
+    "date": "2025-06-02",
+    "etf_ret": -0.00820108902159511,
+    "idx_ret": 0.005632954820585345,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2025-09-02",
+    "etf_ret": -0.008748906153109859,
+    "idx_ret": -0.007410229210411012,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2025-12-31",
+    "etf_ret": -0.01276298498813322,
+    "idx_ret": -0.007408955885817803,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2026-05-01",
+    "etf_ret": -0.013370384714768369,
+    "idx_ret": 0.0027691138283709726,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": false
+   },
+   {
+    "date": "2026-07-01",
+    "etf_ret": -0.006373948535221774,
+    "idx_ret": -0.001352504438058455,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   },
+   {
+    "date": "2026-09-01",
+    "etf_ret": -0.008695652173912993,
+    "idx_ret": -0.0068704238054380085,
+    "idx_above_ema50": true,
+    "etf_back_above_in_5d": true
+   }
+  ],
+  "cum_price": 0.123,
+  "cum_total": 0.933,
+  "cum_index": 1.609
+ }
+}

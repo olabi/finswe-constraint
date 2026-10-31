@@ -1,0 +1,82 @@
+diff --git a/tests/test_finswe_pub21.py b/tests/test_finswe_pub21.py
+new file mode 100644
+index 0000000..becc583
+--- /dev/null
++++ b/tests/test_finswe_pub21.py
+@@ -0,0 +1,76 @@
++"""FinSWE PUB-21 (hidden): a run dated D never reads a filing made after D, however the
++model writes D. Behavioural, through the tool a fundamentals analyst calls; any fix point
++(date layer or vendor) passes."""
++
++from __future__ import annotations
++
++from unittest import mock
++
++import pytest
++from langchain_core.messages import AIMessage
++from langgraph.graph import END, START, MessagesState, StateGraph
++from langgraph.prebuilt import ToolNode
++
++from tradingagents.agents import tools
++from tradingagents.dataflows.vendors import sec_edgar
++
++RUN_DATE = "2024-07-03"
++TICKERS = {"0": {"cik_str": 822416, "ticker": "PHM", "title": "PulteGroup, Inc."}}
++
++
++def _q(start, end, val, filed):
++    return {"start": start, "end": end, "val": val, "filed": filed, "form": "10-Q",
++            "fy": int(end[:4]), "fp": "Q"}
++
++
++FACTS = {"cik": 822416, "entityName": "PulteGroup, Inc.", "facts": {"us-gaap": {
++    "NetIncomeLoss": {"units": {"USD": [
++        _q("2024-01-01", "2024-03-31", 662_000_000, "2024-04-23"),   # on file by the run date
++        _q("2024-04-01", "2024-06-30", 809_000_000, "2024-07-23"),   # filed 20 days later
++    ]}},
++}}}
++
++
++class _State(MessagesState):
++    trade_date: str
++    company_of_interest: str
++
++
++@pytest.fixture(autouse=True)
++def _edgar_offline(tmp_path, monkeypatch):
++    monkeypatch.setattr(sec_edgar, "get_config", lambda: {"data_cache_dir": str(tmp_path)})
++    monkeypatch.setattr(sec_edgar, "_fetch_json",
++                        lambda url: TICKERS if "company_tickers" in url else FACTS)
++
++
++def _income_statement(curr_date):
++    graph = StateGraph(_State)
++    graph.add_node("tools", ToolNode([tools.get_income_statement]))
++    graph.add_edge(START, "tools")
++    graph.add_edge("tools", END)
++
++    def vendor(method, ticker, freq, as_of_date):
++        return sec_edgar.get_income_statement(ticker, freq, as_of_date)
++
++    with mock.patch.object(tools, "route_to_vendor", side_effect=vendor):
++        out = graph.compile().invoke({
++            "messages": [AIMessage("", tool_calls=[{"name": "get_income_statement",
++                                                    "args": {"curr_date": curr_date}, "id": "1"}])],
++            "trade_date": RUN_DATE,
++            "company_of_interest": "PHM",
++        })
++    return out["messages"][-1].content
++
++
++@pytest.mark.unit
++@pytest.mark.parametrize("curr_date", ["2024-07-3", "2024-7-3", "2024-7-03"])
++def test_an_unpadded_date_does_not_serve_a_later_filing(curr_date):
++    out = _income_statement(curr_date)
++    assert "809" not in out, out
++    assert "662" in out, out  # the filing already on file is still served
++
++
++@pytest.mark.unit
++def test_a_padded_date_serves_what_was_on_file():
++    out = _income_statement(RUN_DATE)
++    assert "662" in out and "809" not in out, out

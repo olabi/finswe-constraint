@@ -1,0 +1,9 @@
+{
+  "id": "INJ-03-future-news",
+  "base": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "fix": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "family": "temporal",
+  "provenance": "latent",
+  "invariant": "Point-in-time news: parse_headlines(now=T) never returns items published after T.",
+  "handwritten": true
+}

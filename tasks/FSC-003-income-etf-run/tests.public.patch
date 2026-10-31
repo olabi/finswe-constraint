@@ -1,0 +1,45 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index 9b90d52..fc39acd 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -546,3 +546,40 @@ def test_non_nxt_stock_forced_regular_even_with_extended(make_config, tmp_path):
+     eng = _engine_regular(make_config, tmp_path, regular_only=False, nxt=False)
+     labels = {s[2] for s in eng._sessions_for("005935")}
+     assert labels == {"regularMarket"}
++
++
++# ── 인컴 ETF 는 run(엔진)에서도 완화 기준 (SCHD 오매도 방지) ──────────
++
++def _income_engine(make_config, tmp_path, symbol, closes, avg):
++    from decimal import Decimal
++    cfg = make_config()
++    paper = PaperBroker(tmp_path / "paper.json")
++    paper.market_buy(symbol, 5, Decimal(str(avg)), "KRW")
++    eng = TradingEngine(
++        client=TossClient(cfg, transport=market_transport(closes)),
++        broker=PaperBrokerAdapter(paper),
++        risk=RiskManager(max_order_krw=cfg.max_order_krw, max_daily_orders=cfg.max_daily_orders,
++                         min_confidence=cfg.min_confidence, cooldown_polls=cfg.cooldown_polls),
++        settings=EngineSettings(symbols=[symbol], mode="rule", interval="1d",
++                                respect_market_hours=False, decisions_log=str(tmp_path / "d.jsonl")),
++        strategy=QuantStrategy(),  # 추세전략이지만 인컴 ETF 면 엔진이 우회
++    )
++    return eng, paper
++
++
++def test_income_etf_on_run_holds_on_micro_cross(make_config, tmp_path):
++    # SCHD 시나리오: EMA50 −0.1% 미세 하회 → 추세전략이면 레짐붕괴 SELL, 인컴 완화기준은 HOLD
++    eng, paper = _income_engine(make_config, tmp_path, "SCHD", [100.0] * 59 + [99.9], avg=90)
++    eng.run(max_polls=1)
++    assert paper.position("SCHD") is not None  # 안 팔림
++    rec = json.loads(Path(tmp_path / "d.jsonl").read_text().splitlines()[-1])
++    assert rec["final"] == "HOLD"
++
++
++def test_income_etf_on_run_sells_on_real_decline(make_config, tmp_path):
++    # 인컴 ETF 라도 EMA50 −5% 면 SELL (자본 위협 수준)
++    eng, paper = _income_engine(make_config, tmp_path, "JEPQ", [100.0] * 59 + [95.0], avg=90)
++    eng.run(max_polls=1)
++    assert paper.position("JEPQ") is None  # 청산됨
++    rec = json.loads(Path(tmp_path / "d.jsonl").read_text().splitlines()[-1])
++    assert rec["final"] == "SELL"

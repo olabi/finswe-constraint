@@ -1,0 +1,9 @@
+{
+  "id": "FSC-007-nxt-session",
+  "base": "09b028de8ed23a1a3c8e74e048f6d8b9cf79f86f",
+  "fix": "fe5c1c87162c24cb0cccdfbbaab270b526e5753c",
+  "family": "temporal",
+  "provenance": "incident",
+  "incident_date": "2026-06-25",
+  "invariant": "A symbol that does not trade on the extended venue (NXT) is open only during regular hours, regardless of the extended-hours setting."
+}

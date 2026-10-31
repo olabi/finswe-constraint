@@ -1,0 +1,10 @@
+{
+  "id": "INJ-07-priced-in-sign",
+  "base": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "fix": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "family": "llm-integration",
+  "provenance": "incident-regression-injected",
+  "invariant": "A price rise never 'prices in' bad news: negative-dominant news with change ≥ 0 is labelled not-yet-absorbed.",
+  "handwritten": true,
+  "bug_patch_withheld": true
+}

@@ -1,0 +1,25 @@
+diff --git a/tests/test_finswe_inj05.py b/tests/test_finswe_inj05.py
+new file mode 100644
+index 0000000..4c7f24b
+--- /dev/null
++++ b/tests/test_finswe_inj05.py
+@@ -0,0 +1,19 @@
++from ai_trader.strategy import Bars, PositionView, accumulate_signal
++
++
++def _bars(closes, spread):
++    return Bars(list(closes), [c * (1 + spread) for c in closes], [c * (1 - spread) for c in closes],
++                list(closes), [1000.0] * len(closes))
++
++
++def test_volatile_holding_survives_a_25pct_drawdown():
++    # daily range ±6% → 4×ATR% ≈ 45%: a −25% drawdown is inside the adaptive floor
++    closes = [100.0, 104.0, 97.0, 103.0, 95.0, 101.0, 92.0, 98.0, 90.0] * 3 + [80.0, 76.0, 75.0]
++    sig = accumulate_signal(_bars(closes, 0.06), PositionView(quantity=10, avg_price=100.0))
++    assert sig.action == "HOLD"
++
++
++def test_calm_holding_still_uses_the_fixed_floor():
++    closes = [100.0 - 0.9 * i for i in range(30)]  # smooth slide to ~−26%, tiny ATR
++    sig = accumulate_signal(_bars(closes, 0.002), PositionView(quantity=10, avg_price=100.0))
++    assert sig.action == "SELL"

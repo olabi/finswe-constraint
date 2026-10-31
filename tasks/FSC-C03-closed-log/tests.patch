@@ -1,0 +1,29 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index f57d898..6f42077 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -306,3 +306,24 @@ def test_buy_qty_zero_diagnoses_order_cap(make_config, tmp_path):
+     rec = json.loads(Path(tmp_path / "decisions.jsonl").read_text().splitlines()[-1])
+     assert rec["executed"] is False
+     assert "1건 한도" in rec["note"] and "AI_TRADER_MAX_ORDER_KRW" in rec["note"]
++
++
++def test_closed_market_log_suppressed_on_repeat(make_config, tmp_path, monkeypatch):
++    # 토요일(전체 휴장)에서 여러 폴 돌려도 '전체 시장 마감' 상세는 1회만 출력
++    import ai_trader.engine as eng
++
++    class FixedDateTime(eng.datetime):
++        @classmethod
++        def now(cls, tz=None):
++            base = eng.datetime(2026, 6, 13, 11, 0, tzinfo=eng.timezone.utc)
++            return base.astimezone(tz) if tz else base
++
++    monkeypatch.setattr(eng, "datetime", FixedDateTime)
++    monkeypatch.setattr(eng.time, "sleep", lambda s: None)  # 대기 무력화
++    engine, _ = _engine_with_market(make_config, tmp_path, KR_CAL)
++    import io, contextlib
++    buf = io.StringIO()
++    with contextlib.redirect_stdout(buf):
++        engine.run(max_polls=4)
++    out = buf.getvalue()
++    assert out.count("전체 시장 마감") == 1  # 반복 휴장 도배 안 됨

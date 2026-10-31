@@ -1,0 +1,23 @@
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+new file mode 100644
+index 0000000..dfeacbf
+--- /dev/null
++++ b/tests/test_cli.py
+@@ -0,0 +1,17 @@
++import pytest
++
++import ai_trader.cli as cli
++
++
++def test_main_exits_cleanly_on_keyboard_interrupt(make_config, monkeypatch, capsys):
++    # Ctrl+C (예: LIVE 입력 프롬프트) 시 트레이스백 없이 조용히 종료(코드 130)
++    monkeypatch.setattr(cli.Config, "from_env", classmethod(lambda cls: make_config()))
++
++    def boom(cfg, args):
++        raise KeyboardInterrupt
++
++    monkeypatch.setattr(cli, "cmd_doctor", boom)  # main 이 핸들러 dict 구성 시 집어옴
++    with pytest.raises(SystemExit) as exc:
++        cli.main(["doctor"])
++    assert exc.value.code == 130
++    assert "중단됨" in capsys.readouterr().out

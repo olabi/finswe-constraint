@@ -1,0 +1,9 @@
+{
+  "id": "FSC-003-income-etf-run",
+  "base": "fe5c1c87162c24cb0cccdfbbaab270b526e5753c",
+  "fix": "036c06a1752f86f75a3d8aa959804baf4ed7bab9",
+  "family": "risk",
+  "provenance": "incident",
+  "incident_date": "2026-06-25",
+  "invariant": "Income ETFs held by the engine must not be trend-sold on a marginal regime cross; only a material decline exits."
+}

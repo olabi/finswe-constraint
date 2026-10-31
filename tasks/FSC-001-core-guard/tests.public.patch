@@ -1,0 +1,69 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index 1670df0..20dc2e3 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -171,6 +171,64 @@ def test_ai_mode_sell_without_position_is_blocked(make_config, tmp_path):
+     assert record["executed"] is False and "매도 불가" in record["note"]
+ 
+ 
++# ── Core 보호는 모드와 무관 (2026-07-31 실사고 회귀) ──────────────────
++# 005935(Core-지수/우량, --accumulate) 1주가 rule=HOLD("매집 보유 +13.5%, 자본 바닥 -42%")
++# 인데 ai 모드에서 ai=SELL@0.85 로 익절 청산됐다. AI 는 Core 청산을 발의할 수 없어야 한다.
++
++
++def _core_engine(make_config, tmp_path, advisor, paper=None):
++    engine, pp = build_engine(
++        make_config, tmp_path, GOLDEN_CROSS_CLOSES, mode="ai", advisor=advisor, paper=paper
++    )
++    engine.settings.accumulate = {"005930"}
++    return engine, pp
++
++
++def test_ai_cannot_originate_sell_on_accumulate_core(make_config, tmp_path):
++    paper = PaperBroker(tmp_path / "paper.json")
++    paper.market_buy("005930", 10, Decimal("100"), "KRW")
++    seller = FakeAdvisor(AdvisorDecision("SELL", 0.85, "레짐 하회·MACD 음수 — 기술적 청산", 0.1))
++    engine, paper = _core_engine(make_config, tmp_path, seller, paper=paper)
++
++    engine.run(max_polls=1)
++
++    pos = paper.position("005930")
++    assert pos is not None and pos.quantity == 10  # 청산되지 않았다
++    record = json.loads(Path(tmp_path / "decisions.jsonl").read_text(encoding="utf-8").splitlines()[-1])
++    assert record["final"] == "HOLD" and record["executed"] is False
++    # (relaxed) note wording is not scored — behavior above is the invariant
++
++
++def test_ai_sell_still_allowed_on_non_core_symbol(make_config, tmp_path):
++    # 보호는 분류 대상에만 — Satellite 는 종전대로 AI 판단이 집행된다
++    paper = PaperBroker(tmp_path / "paper.json")
++    paper.market_buy("005930", 10, Decimal("100"), "KRW")
++    seller = FakeAdvisor(AdvisorDecision("SELL", 0.85, "추세 청산", 0.1))
++    engine, paper = build_engine(
++        make_config, tmp_path, GOLDEN_CROSS_CLOSES, mode="ai", advisor=seller, paper=paper
++    )  # accumulate 미지정
++
++    engine.run(max_polls=1)
++
++    assert paper.position("005930") is None  # 팔렸다
++    record = json.loads(Path(tmp_path / "decisions.jsonl").read_text(encoding="utf-8").splitlines()[-1])
++    assert record["executed"] is True
++
++
++def test_rule_originated_protective_sell_passes_core_guard(make_config, tmp_path):
++    # 룰 자신이 SELL(자본보존 바닥 하회)이면 Core 라도 통과해야 한다 — 보호가 손절을 막으면 더 위험
++    paper = PaperBroker(tmp_path / "paper.json")
++    paper.market_buy("005930", 10, Decimal("100000"), "KRW")  # 평단 100,000 → 현재가 116 은 -99%
++    seller = FakeAdvisor(AdvisorDecision("SELL", 0.85, "자본보존", 0.1))
++    engine, paper = _core_engine(make_config, tmp_path, seller, paper=paper)
++
++    engine.run(max_polls=1)
++
++    record = json.loads(Path(tmp_path / "decisions.jsonl").read_text(encoding="utf-8").splitlines()[-1])
++    assert record["rule"]["action"] == "SELL"  # 매집 자본보존 바닥 발동
++    assert record["executed"] is True and "Core 보호" not in record["note"]
++
++
+ # ── 장 운영 시간 게이트 ─────────────────────────────────────────
+ 
+ from conftest import GOLDEN_CROSS_CLOSES as _GC  # noqa: E402

@@ -1,0 +1,42 @@
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -858,3 +858,39 @@
+     _engine_with_broker(make_config, tmp_path, GOLDEN_CROSS_CLOSES, broker, 1).report_once()
+     out = capsys.readouterr().out
+     assert "보유 1주" in out and "골든크로스" in out
++
++
++# ── FinSWE-Constraint hidden tests (FSC-014) ─────────────────────────────
++# The real candles endpoint rejects count > 200 with 400 invalid-request.
++def _candle_counts(make_config, tmp_path, defense_ma):
++    engine, _ = build_engine(make_config, tmp_path, [100.0 + i * 0.1 for i in range(80)])
++    engine.settings.defense_ma = defense_ma
++    seen = []
++    orig = engine.client.candles
++
++    def spy(symbol, **kw):
++        seen.append(kw.get("count"))
++        return orig(symbol, **kw)
++
++    engine.client.candles = spy
++    engine.step_symbol("005930")
++    return seen
++
++
++def test_fsc014_candle_request_never_exceeds_api_max(make_config, tmp_path):
++    seen = _candle_counts(make_config, tmp_path, defense_ma=200)
++    assert seen and max(seen) <= 200
++
++
++def test_fsc014_defense_ma_still_extends_lookback(make_config, tmp_path):
++    # Guard against "fixing" the cap by dropping the defense-MA lookback entirely.
++    seen = _candle_counts(make_config, tmp_path, defense_ma=150)
++    assert seen[0] >= 155
++
++
++def test_fsc014_default_count_unchanged_without_defense(make_config, tmp_path):
++    (tmp_path / "ref").mkdir()
++    (tmp_path / "run").mkdir()
++    engine, _ = build_engine(make_config, tmp_path / "ref", [100.0] * 80)
++    seen = _candle_counts(make_config, tmp_path / "run", defense_ma=0)
++    assert seen[0] == engine.settings.candle_count

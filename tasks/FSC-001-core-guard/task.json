@@ -1,0 +1,9 @@
+{
+  "id": "FSC-001-core-guard",
+  "base": "28f434b31923de002702a42e44fff6c3b4ea04b1",
+  "fix": "ac056ad7eeaf6f59e25b6869a99cca7a2403d1fb",
+  "family": "risk",
+  "provenance": "incident",
+  "incident_date": "2026-07-31",
+  "invariant": "A protected core holding may be closed only when the rule itself signals SELL; an AI-only SELL must not liquidate it."
+}

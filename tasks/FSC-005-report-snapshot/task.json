@@ -1,0 +1,11 @@
+{
+  "id": "FSC-005-report-snapshot",
+  "base": "2e12a4a211f994c4e0a13433df28651b54630750",
+  "fix": "81375dc59d2eaee045694ba4e408eeb86f714e82",
+  "family": "consistency",
+  "provenance": "incident",
+  "incident_date": "2026-06-26",
+  "invariant": "The startup report must show the same rule signal the engine executes (income ETFs use the relaxed rule in both).",
+  "handwritten": true,
+  "note": "Commit also changed the emergency stop (strategy.py); gold keeps only the engine.py snapshot fix, hidden test keeps only test_rule_for_income_etf_consistent_snapshot."
+}

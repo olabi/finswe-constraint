@@ -1,0 +1,12 @@
+{
+  "id": "FSC-002-covered-call",
+  "base": "40daff3915faaebdc5e35d107f252e0c53194757",
+  "fix": "9bf847c5e2cabf1f2bf3694640fca07fe7346607",
+  "family": "risk",
+  "provenance": "incident-reconstructed",
+  "incident_date": "2026-07-06",
+  "handwritten": true,
+  "invariant": "Covered-call / option-income ETFs are never trend-sold, even when trend trading of income ETFs is enabled; dividend-growth ETFs may be trend-traded when enabled.",
+  "note": "The --trade-income-etf design that sold 156 JEPQ live was never committed (fixed inside 9bf847c). bug.patch re-creates it; gold splits COVERED_CALL_ETFS out; hidden tests hand-written.",
+  "bug_patch_withheld": true
+}

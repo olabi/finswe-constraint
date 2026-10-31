@@ -1,0 +1,25 @@
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+new file mode 100644
+index 0000000..f70f122
+--- /dev/null
++++ b/tests/test_cli.py
+@@ -0,0 +1,19 @@
++import pytest
++
++import ai_trader.cli as cli
++
++
++def test_main_exits_cleanly_on_keyboard_interrupt(make_config, monkeypatch, capsys):
++    # Ctrl+C (e.g. at the LIVE confirmation prompt) must end quietly with exit code 130.
++    monkeypatch.setattr(cli.Config, "from_env", classmethod(lambda cls: make_config()))
++
++    def boom(cfg, args):
++        raise KeyboardInterrupt
++
++    monkeypatch.setattr(cli, "cmd_doctor", boom)
++    try:
++        with pytest.raises(SystemExit) as exc:
++            cli.main(["doctor"])
++    except KeyboardInterrupt:
++        pytest.fail("KeyboardInterrupt escaped main() (traceback instead of a quiet exit)")
++    assert exc.value.code == 130

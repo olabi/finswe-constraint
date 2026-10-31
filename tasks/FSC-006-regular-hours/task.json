@@ -1,0 +1,9 @@
+{
+  "id": "FSC-006-regular-hours",
+  "base": "cf2e167dce473982d9f3546ef75ac70dbcee729e",
+  "fix": "09b028de8ed23a1a3c8e74e048f6d8b9cf79f86f",
+  "family": "temporal",
+  "provenance": "incident",
+  "incident_date": "2026-06-25",
+  "invariant": "When regular-hours-only is requested, extended (pre/after-market) sessions must not count as open, so stale off-hours prices never drive decisions."
+}

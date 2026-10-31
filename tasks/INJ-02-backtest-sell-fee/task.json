@@ -1,0 +1,10 @@
+{
+  "id": "INJ-02-backtest-sell-fee",
+  "base": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "fix": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "family": "numerical",
+  "provenance": "injected",
+  "invariant": "Backtest equity is charged the one-way fee on BOTH the buy and the sell leg.",
+  "handwritten": true,
+  "bug_patch_withheld": true
+}

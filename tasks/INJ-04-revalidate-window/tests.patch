@@ -1,0 +1,26 @@
+diff --git a/tests/test_finswe_inj04.py b/tests/test_finswe_inj04.py
+new file mode 100644
+index 0000000..3248588
+--- /dev/null
++++ b/tests/test_finswe_inj04.py
+@@ -0,0 +1,20 @@
++from ai_trader.revalidate import Edge, Variant, revalidate_universe
++from ai_trader.strategy import RuleSignal
++from conftest import make_bars
++
++
++class _AlwaysIn:
++    name = "always-in"
++
++    def __init__(self, min_bars):
++        self.min_bars = min_bars
++
++    def evaluate(self, bars, position):
++        return RuleSignal("BUY" if position is None else "HOLD", [])
++
++
++def test_identical_trading_scores_identically_despite_different_warmups():
++    closes = [100 * (1.003 ** i) * (1.02 if i % 7 == 0 else 1.0) for i in range(160)]
++    edge = Edge("same behaviour", Variant(_AlwaysIn(10)), Variant(_AlwaysIn(70)))
++    r = revalidate_universe({"X": make_bars(closes)}, edges=[edge], recent=40)["edges"][0]
++    assert r["full_a"] == r["full_b"] and r["recent_a"] == r["recent_b"]

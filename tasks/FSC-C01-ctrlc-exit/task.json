@@ -1,0 +1,9 @@
+{
+  "id": "FSC-C01-ctrlc-exit",
+  "base": "b4cb5759fd370b88df88c4f467e42542e895c303",
+  "fix": "dc3b7a2fad88de4624e581b4ce9ec342ebba0b2a",
+  "family": "control",
+  "provenance": "incident-ops",
+  "incident_date": "2026-06",
+  "invariant": "Ctrl+C at any prompt exits quietly (no traceback). No domain invariant."
+}

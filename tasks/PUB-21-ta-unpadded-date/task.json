@@ -1,0 +1,22 @@
+{
+  "id": "PUB-21-ta-unpadded-date",
+  "label": "FinSWE-21",
+  "repo": "https://github.com/TauricResearch/TradingAgents",
+  "license": "Apache-2.0",
+  "repo_name": "TradingAgents",
+  "base": "e8f5503e9b86d5c2710b0c76b1f686703968c9df",
+  "fix": "a5b0f217e35b50286ef8a69875f2ffceacea1657",
+  "pkg": "tradingagents",
+  "code_dirs": [
+    "tradingagents/",
+    "cli/",
+    "tests/"
+  ],
+  "env": "tradingagents",
+  "family": "temporal",
+  "provenance": "public-incident",
+  "invariant": "Point-in-time fundamentals: a run dated D never receives a filing made after D, however the model writes D.",
+  "upstream": "PR #1488 (opened 2026-10-05 for a FRED 400 error; point-in-time leak reported in a comment 2026-10-22; fixed in a5b0f21, released in v0.7.1 on 2026-10-27)",
+  "gold_scope": "date_window.py hunk of a5b0f21 only; the create_run_state validation in the same commit guards a different entry point and is not part of this task",
+  "handwritten": true
+}

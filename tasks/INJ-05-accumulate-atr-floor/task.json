@@ -1,0 +1,10 @@
+{
+  "id": "INJ-05-accumulate-atr-floor",
+  "base": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "fix": "c4c05ea5fe78af5c13a09e57fe2b0240e3ef0148",
+  "family": "risk",
+  "provenance": "injected",
+  "invariant": "The accumulate capital floor widens with volatility: floor = max(stop_pct, atr_mult × ATR%).",
+  "handwritten": true,
+  "bug_patch_withheld": true
+}

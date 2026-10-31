@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 384" width="760" height="384" font-family='system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif' role="img" aria-labelledby="t d">
+<title id="t">Figure 3. FinSWE-21 across four kernels: runs resolved per condition</title><desc id="d">Stacked bars of resolved runs out of 12 per condition over kernels v10–v13, split by whether the win came within 40 calls. C_know 6 within and 5 after call 40; A_know 6; C_domain 9; B_generic 3, its gate passing 7 patches that failed the hidden tests.</desc>
+<rect width="760" height="384" fill="#fcfcfb"/>
+<text x="20.0" y="28.0" font-size="15" fill="#0b0b0b" text-anchor="start" font-weight="600">FinSWE-21 (public task), kernels v10–v13: runs resolved of 12 per condition</text>
+<rect x="20" y="45" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="36.0" y="54.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Resolved within 40 calls</text>
+<rect x="222.0" y="45" width="10" height="10" rx="2" fill="#eb6834"/>
+<text x="238.0" y="54.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="400">Resolved after call 40</text>
+<line x1="110.0" y1="66.0" x2="110.0" y2="297.0" stroke="#c3c2b7" stroke-width="1.5"/>
+<text x="110.0" y="315.0" font-size="11" fill="#898781" text-anchor="middle" font-weight="400" style="font-variant-numeric: tabular-nums">0</text>
+<line x1="187.5" y1="66.0" x2="187.5" y2="297.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="187.5" y="315.0" font-size="11" fill="#898781" text-anchor="middle" font-weight="400" style="font-variant-numeric: tabular-nums">3</text>
+<line x1="265.0" y1="66.0" x2="265.0" y2="297.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="265.0" y="315.0" font-size="11" fill="#898781" text-anchor="middle" font-weight="400" style="font-variant-numeric: tabular-nums">6</text>
+<line x1="342.5" y1="66.0" x2="342.5" y2="297.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="342.5" y="315.0" font-size="11" fill="#898781" text-anchor="middle" font-weight="400" style="font-variant-numeric: tabular-nums">9</text>
+<line x1="420.0" y1="66.0" x2="420.0" y2="297.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="420.0" y="315.0" font-size="11" fill="#898781" text-anchor="middle" font-weight="400" style="font-variant-numeric: tabular-nums">12</text>
+<text x="442.0" y="62.0" font-size="11" fill="#898781" text-anchor="start" font-weight="400">note</text>
+<text x="96.0" y="86.0" font-size="12.5" fill="#52514e" text-anchor="end" font-weight="400">A_prompt</text>
+<path d="M110.0,74.0 H261.0 Q265.0,74.0 265.0,78.0 V86.0 Q265.0,90.0 261.0,90.0 H110.0 Z" fill="#2a78d6"/>
+<text x="96.0" y="124.0" font-size="12.5" fill="#52514e" text-anchor="end" font-weight="400">A_know</text>
+<path d="M110.0,112.0 H261.0 Q265.0,112.0 265.0,116.0 V124.0 Q265.0,128.0 261.0,128.0 H110.0 Z" fill="#2a78d6"/>
+<text x="442.0" y="124.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="400">ties C_know within 40 calls (6 vs 6)</text>
+<text x="96.0" y="162.0" font-size="12.5" fill="#52514e" text-anchor="end" font-weight="400">A_retry</text>
+<path d="M110.0,150.0 H209.3 Q213.3,150.0 213.3,154.0 V162.0 Q213.3,166.0 209.3,166.0 H110.0 Z" fill="#2a78d6"/>
+<text x="442.0" y="162.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="400">content-free retry rescued none</text>
+<text x="96.0" y="200.0" font-size="12.5" fill="#52514e" text-anchor="end" font-weight="400">B_generic</text>
+<path d="M110.0,188.0 H183.5 Q187.5,188.0 187.5,192.0 V200.0 Q187.5,204.0 183.5,204.0 H110.0 Z" fill="#2a78d6"/>
+<text x="442.0" y="200.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="400">gate passed 10; 7 failed hidden tests</text>
+<text x="96.0" y="238.0" font-size="12.5" fill="#52514e" text-anchor="end" font-weight="400">C_domain</text>
+<path d="M110.0,226.0 H315.7 Q315.7,226.0 315.7,226.0 V242.0 Q315.7,242.0 315.7,242.0 H110.0 Z" fill="#2a78d6"/>
+<path d="M317.7,226.0 H338.5 Q342.5,226.0 342.5,230.0 V238.0 Q342.5,242.0 338.5,242.0 H317.7 Z" fill="#eb6834"/>
+<text x="442.0" y="238.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="400">gate passed 9; 0 failed hidden tests</text>
+<text x="96.0" y="276.0" font-size="12.5" fill="#52514e" text-anchor="end" font-weight="400">C_know</text>
+<path d="M110.0,264.0 H264.0 Q264.0,264.0 264.0,264.0 V280.0 Q264.0,280.0 264.0,280.0 H110.0 Z" fill="#2a78d6"/>
+<path d="M266.0,264.0 H390.2 Q394.2,264.0 394.2,268.0 V276.0 Q394.2,280.0 390.2,280.0 H266.0 Z" fill="#eb6834"/>
+<text x="442.0" y="276.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="400">5 of 11 wins after call 40</text>
+<text x="110.0" y="350.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="400">One task, 4 kernels × 3 seeds; v12–v13 ran with a changed prompt and hygiene message.</text>
+<text x="110.0" y="368.0" font-size="11.5" fill="#898781" text-anchor="start" font-weight="400">Post hoc and descriptive: not pooled with the 360 core runs.</text>
+</svg>

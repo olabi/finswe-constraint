@@ -1,0 +1,63 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index c6996fd..0fded7e 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -505,3 +505,58 @@ def test_limit_price_tick_rounding():
+ 
+ 
+ 
++
++
++# ── 정규장만 vs 시간외 포함 (afterMarket 15:30 후 폴링 방지) ──────────
++# FinSWE-Constraint relaxed version: asserts the public market-hours gate (open_symbols)
++# at a frozen time instead of the private _sessions_for helper (original kept in tests.orig.patch).
++
++from test_market import KR_CAL as _KRCAL  # noqa: E402
++
++
++def _engine_regular(make_config, tmp_path, regular_only: bool):
++    cfg = make_config()
++    client = TossClient(cfg, transport=market_transport_with_calendar(_GC, _KRCAL))
++    return TradingEngine(
++        client=client, broker=PaperBrokerAdapter(PaperBroker(tmp_path / "p.json")),
++        risk=RiskManager(max_order_krw=cfg.max_order_krw, max_daily_orders=cfg.max_daily_orders,
++                         min_confidence=cfg.min_confidence, cooldown_polls=cfg.cooldown_polls),
++        settings=EngineSettings(symbols=["005930"], mode="rule", interval="1d",
++                                regular_hours_only=regular_only, decisions_log=str(tmp_path / "d.jsonl")),
++        strategy=SmaRsiStrategy(),
++    )
++
++
++def _freeze(monkeypatch, hh, mm):
++    import ai_trader.engine as eng
++    from datetime import timedelta as _td
++    kst = eng.timezone(_td(hours=9))
++    fixed = eng.datetime(2026, 6, 15, hh, mm, tzinfo=kst)  # next business day in KR_CAL
++
++    class FixedDateTime(eng.datetime):
++        @classmethod
++        def now(cls, tz=None):
++            return fixed.astimezone(tz) if tz else fixed.replace(tzinfo=None)
++
++    monkeypatch.setattr(eng, "datetime", FixedDateTime)
++
++
++def test_regular_hours_only_filters_extended_sessions(make_config, tmp_path, monkeypatch):
++    _freeze(monkeypatch, 16, 0)  # after-market (15:30–20:00 KST)
++    eng = _engine_regular(make_config, tmp_path, regular_only=True)
++    opened, _ = eng.open_symbols()
++    assert opened == []  # 시간외는 개장으로 보지 않음
++
++
++def test_include_extended_hours_keeps_all_sessions(make_config, tmp_path, monkeypatch):
++    _freeze(monkeypatch, 16, 0)
++    eng = _engine_regular(make_config, tmp_path, regular_only=False)
++    opened, _ = eng.open_symbols()
++    assert opened == ["005930"]  # 시간외 옵트인 → 개장
++
++
++def test_regular_hours_only_still_open_in_regular_session(make_config, tmp_path, monkeypatch):
++    _freeze(monkeypatch, 10, 0)  # regular session — guards against "always closed"
++    eng = _engine_regular(make_config, tmp_path, regular_only=True)
++    opened, _ = eng.open_symbols()
++    assert opened == ["005930"]

@@ -1,0 +1,40 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index 0a9bd8a..b4f3937 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -603,3 +603,35 @@ def test_invest_ratio_sizes_from_balance_ignoring_atr(make_config, tmp_path):
+     pos = paper.position("005930")
+     # 잔액 1,000,000 × 0.9 = 900,000, 가격 116 → 900000//116 = 7758주 (ATR 캡 있었으면 훨씬 적었을 것)
+     assert pos is not None and pos.quantity == 900_000 // 116
++
++
++
++# ── FinSWE-Constraint hidden test (FSC-005): startup report == executed rule ─────────
++def _report_rule(out: str, symbol: str) -> str:
++    line = next(l for l in out.splitlines() if l.strip().startswith(f"{symbol}:"))
++    return line.split("| 룰 ")[1].split()[0]
++
++
++def test_startup_report_matches_executed_rule_for_income_etf(make_config, tmp_path, capsys):
++    from ai_trader.strategy import QuantStrategy
++    # held income ETF a hair below EMA50: the trend strategy would SELL, the income rule HOLDs
++    closes = [100.0] * 59 + [99.9]
++    paper = PaperBroker(tmp_path / "paper.json")
++    from decimal import Decimal
++    paper.market_buy("JEPQ", 5, Decimal("90"), "KRW")
++    engine, _ = build_engine(make_config, tmp_path, closes, mode="rule", strategy=QuantStrategy(), paper=paper)
++    engine.settings.symbols = ["JEPQ"]
++    engine.report_once()
++    reported = _report_rule(capsys.readouterr().out, "JEPQ")
++    executed = engine.step_symbol("JEPQ")["rule"]["action"]
++    assert reported == executed, f"report shows {reported}, engine executes {executed}"
++
++
++def test_startup_report_unchanged_for_regular_stock(make_config, tmp_path, capsys):
++    from ai_trader.strategy import QuantStrategy
++    closes = [100.0] * 60 + [110.0]
++    engine, _ = build_engine(make_config, tmp_path, closes, mode="rule", strategy=QuantStrategy())
++    engine.report_once()
++    reported = _report_rule(capsys.readouterr().out, "005930")
++    executed = engine.step_symbol("005930")["rule"]["action"]
++    assert reported == executed

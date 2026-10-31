@@ -1,0 +1,9 @@
+{
+  "id": "FSC-009-hybrid-veto",
+  "base": "1763a2c5e4df605e0d949a524094da05644fc725",
+  "fix": "30143711a412d30831c9232ab42607417e44a2bf",
+  "family": "llm-integration",
+  "provenance": "incident",
+  "incident_date": "2026-06-19",
+  "invariant": "In hybrid mode the AI may veto a rule action only with confidence at or above the veto threshold; a weak objection must not block the rule."
+}

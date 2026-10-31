@@ -1,0 +1,38 @@
+diff --git a/tests/test_engine.py b/tests/test_engine.py
+index 74198da..b29e7c5 100644
+--- a/tests/test_engine.py
++++ b/tests/test_engine.py
+@@ -695,3 +695,33 @@ def test_report_once_applies_ignore_holdings(make_config, tmp_path, capsys):
+     _engine_with_broker(make_config, tmp_path, GOLDEN_CROSS_CLOSES, broker, 1).report_once()
+     out = capsys.readouterr().out
+     assert "보유 1주" in out and "골든크로스" in out
++
++
++
++# ── FinSWE-Constraint hidden tests (FSC-002): covered-call ETFs are never trend-sold ─────
++def _income_held(make_config, tmp_path, symbol, trade_flag):
++    from decimal import Decimal
++    from ai_trader.strategy import QuantStrategy
++    paper = PaperBroker(tmp_path / f"{symbol}-paper.json")
++    paper.market_buy(symbol, 8, Decimal("90"), "KRW")
++    closes = [100.0] * 59 + [99.9]  # a hair under EMA50: trend strategy exits, income rule holds
++    engine, paper = build_engine(make_config, tmp_path, closes, mode="rule", strategy=QuantStrategy(), paper=paper)
++    engine.settings.symbols = [symbol]
++    engine.settings.trade_income_etf = trade_flag
++    rec = engine.step_symbol(symbol)
++    return rec, paper.position(symbol)
++
++
++def test_trade_income_flag_never_trend_sells_covered_call(make_config, tmp_path):
++    rec, pos = _income_held(make_config, tmp_path, "JEPQ", True)
++    assert rec["rule"]["action"] != "SELL" and pos is not None and pos.quantity == 8
++
++
++def test_trade_income_flag_still_trend_trades_dividend_growth(make_config, tmp_path):
++    rec, pos = _income_held(make_config, tmp_path, "SCHD", True)
++    assert rec["rule"]["action"] == "SELL"  # opt-in trend trading keeps working for SCHD
++
++
++def test_income_etf_relaxed_without_flag(make_config, tmp_path):
++    rec, pos = _income_held(make_config, tmp_path, "SCHD", False)
++    assert rec["rule"]["action"] != "SELL" and pos is not None

@@ -1,0 +1,42 @@
+diff --git a/tests/test_finswe_inj02.py b/tests/test_finswe_inj02.py
+new file mode 100644
+index 0000000..7235896
+--- /dev/null
++++ b/tests/test_finswe_inj02.py
+@@ -0,0 +1,36 @@
++import pytest
++
++from ai_trader.backtest import run_backtest
++from ai_trader.strategy import RuleSignal
++from conftest import make_candles
++
++
++class _InOut:
++    name = "inout"
++    min_bars = 5
++
++    def evaluate(self, bars, position):
++        if position is None and len(bars.closes) == 6:
++            return RuleSignal("BUY", [])
++        if position is not None and len(bars.closes) == 12:
++            return RuleSignal("SELL", [])
++        return RuleSignal("HOLD", [])
++
++
++def test_round_trip_charges_both_legs():
++    closes = [100.0 + 2 * i for i in range(20)]
++    res = run_backtest(_InOut(), make_candles(closes), initial_cash=1_000_000.0, fee_bps=25.0)
++    buy = next(t for t in res.trades if t.side == "BUY")
++    sell = next(t for t in res.trades if t.side == "SELL")
++    expected = (1_000_000.0 - buy.price * buy.quantity * (1 + 25 / 10_000)
++                + sell.price * sell.quantity * (1 - 25 / 10_000))
++    assert res.final_equity == pytest.approx(expected, rel=1e-9)
++
++
++def test_zero_fee_round_trip_is_unchanged():
++    closes = [100.0 + 2 * i for i in range(20)]
++    res = run_backtest(_InOut(), make_candles(closes), initial_cash=1_000_000.0, fee_bps=0.0)
++    buy = next(t for t in res.trades if t.side == "BUY")
++    sell = next(t for t in res.trades if t.side == "SELL")
++    expected = 1_000_000.0 + (sell.price - buy.price) * buy.quantity
++    assert res.final_equity == pytest.approx(expected, rel=1e-9)

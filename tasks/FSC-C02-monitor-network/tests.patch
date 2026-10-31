@@ -1,0 +1,35 @@
+diff --git a/tests/test_monitor.py b/tests/test_monitor.py
+index ed4cb3c..3743640 100644
+--- a/tests/test_monitor.py
++++ b/tests/test_monitor.py
+@@ -100,6 +100,30 @@ def test_monitor_income_etf_alerts_on_real_decline(make_config, monkeypatch):
+     assert n == 1 and len(calls) == 1
+ 
+ 
++def test_monitor_loop_survives_transient_network_error(make_config, monkeypatch, capsys):
++    # DNS/연결 오류가 나도 모니터 루프가 죽지 않고 경고 후 재시도 (장시간 구동 견고성)
++    import ai_trader.cli as cli
++
++    class FlakyClient:
++        def holdings(self, symbol=None):
++            raise httpx.ConnectError("nodename nor servname provided")
++
++        def close(self):
++            pass
++
++    def boom_sleep(_):  # 첫 재시도 대기에서 루프 탈출 (무한 루프 방지)
++        raise KeyboardInterrupt
++
++    monkeypatch.setattr(cli, "_client", lambda cfg: FlakyClient())
++    monkeypatch.setattr("time.sleep", boom_sleep)
++    args = cli.build_parser().parse_args(["monitor"])
++    try:
++        cli.cmd_monitor(make_config(), args)  # ConnectError must not propagate
++    except KeyboardInterrupt:
++        pass  # reached the retry sleep → the loop survived the error
++    # (relaxed) the warning wording is not scored
++
++
+ def test_monitor_no_holdings(make_config, capsys):
+     cfg = make_config()
+ 
