@@ -2,7 +2,7 @@
 
   python3 repro/reproduce.py
 
-1. Verifies results/SHA256SUMS: every run record and trace archive is the file the paper used.
+1. Verifies results/SHA256SUMS: every run record is the file the paper used.
 2. Recomputes the core experiment (360 runs, results/core/v5, v6, v8) and FinSWE-21 (72 runs,
    results/v10–v13): rates, the 40-call budget analysis, every contrast with its CI and p-values,
    the interaction, the seed-2 counterfactual, and the per-kernel FinSWE-21 tables.
