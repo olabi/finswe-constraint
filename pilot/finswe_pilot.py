@@ -35,16 +35,21 @@ import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Callable
 
 CONDITIONS = {"A_prompt": None, "A_know": None, "A_retry": "placebo", "B_generic": "generic",
-              "C_domain": "all", "C_know": "all"}
+              "C_domain": "all", "C_know": "all",
+              "A_enforce": None, "C_enforce": "all"}
 # *_know conditions get the domain invariants the C gate checks (id / title / scenario /
 # expected, generated from the verifier itself) in the user prompt up front. A_know vs
 # C_know isolates enforcement: same knowledge, gate on/off ("knowing is not enforcing").
-KNOW = {"A_know", "C_know"}
+KNOW = {"A_know", "C_know", "A_enforce", "C_enforce"}
+# v14 (exploratory, added after the pre-registered analysis): *_enforce = *_know plus the offline
+# tool-level enforcement switches (Budget.enforce_tools / enforce_verify / enforce_cleanup).
+# Same prompt and knowledge as *_know, so *_enforce vs *_know isolates tool-level enforcement.
+ENFORCE = {"A_enforce", "C_enforce"}
 # A_retry is the placebo control: the first submit_patch is bounced with a content-free
 # "re-check your patch" message and the same extra tool calls a failed gate grants,
 # so B/C gains can be separated from "one more chance + more budget".
@@ -230,6 +235,8 @@ class Session:
 
     def __init__(self, task: Task, condition: str, work: Path, budget: Budget,
                  verifier: Callable[[str, Path, str], dict] | None, python: str):
+        if condition in ENFORCE:
+            budget = replace(budget, enforce_tools=True, enforce_verify=True, enforce_cleanup=True)
         self.task, self.condition, self.work, self.b = task, condition, work, budget
         self.verifier, self.python = verifier, python
         self.level = CONDITIONS[condition]

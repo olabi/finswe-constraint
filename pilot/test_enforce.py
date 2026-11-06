@@ -102,6 +102,13 @@ def main() -> int:
     assert "repro.py" not in s.submitted_patch and "tests/test_core.py" not in s.submitted_patch
     assert sorted(s.cleaned) == ["repro.py", "tests/test_core.py"], s.cleaned
 
+    # *_enforce conditions switch all three on; *_know conditions keep them off
+    for cond, on in (("A_enforce", True), ("C_enforce", True), ("A_know", False), ("C_know", False)):
+        w = repo()
+        ses = fp.Session(fp.Task("T", w, w, "", {}, {"id": "T"}), cond, w, fp.Budget(), None, sys.executable)
+        assert (ses.b.enforce_tools, ses.b.enforce_verify, ses.b.enforce_cleanup) == (on,) * 3, cond
+        assert (cond in fp.KNOW) and fp.CONDITIONS[cond] == fp.CONDITIONS[cond.replace("enforce", "know")]
+
     # guided tool calls: the request body asks vLLM for a required tool call
     assert fp.LLMConfig(base_url="http://x", model="m").guided_tools is False
     print("✓ offline enforcement: off by default; tools, verify and cleanup behave as specified")
