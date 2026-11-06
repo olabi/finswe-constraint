@@ -304,3 +304,20 @@ rules enforced at the tool boundary help where the same rules stated in the prom
 - Runs: 20 core tasks + FinSWE-21 × 2 arms × seeds 0–2 = 126 runs in one kernel. Controls are
   not re-run: `*_know` of v5/v6/v8 (core, seeds 0/1/2) and v10–v13 (FinSWE-21), paired by
   task × seed. Non-concurrent controls and a post-hoc design: results are descriptive.
+
+## v14 — 2026-11-06 (Kaggle kernel version 15; A_enforce / C_enforce × 21 tasks × seeds 0–2, 126/126 runs, 0 contaminated)
+
+- Kaggle version 14 ran the old runner: the dataset version with the new `finswe_pilot.py` had
+  not been created when the kernel was pushed, and it stopped at the first run with
+  `KeyError: 'A_enforce'`, after vLLM start-up. The dataset was then versioned from the
+  dataset on Kaggle with only `pilot/finswe_pilot.py` replaced (checked identical to the v13
+  runner beforehand), the new runner was confirmed by downloading it back, and the kernel was
+  re-pushed as version 15. `results/v14/` is version 15.
+- Resolved: A_enforce 38 of 63, C_enforce 47 of 63 (core 36 and 44 of 60; FinSWE-21 2 and 3
+  of 3). Refusals: scratch 9 / 12, verify 4 / 10, tests 0, network 0; cleanup removed nothing.
+- Against the core `*_know` runs of v5/v6/v8, paired by task × seed: +1.7 pp (A) and 0.0 pp (C).
+  Hygiene bounces fell from 41 of 60 C_know runs to 6 of 60, but the core runs predate the v12
+  prompt fix, so that drop is not attributed to enforcement alone. Paper Section 5.5.
+- C_enforce logged 57 errored domain checks (C_know: 17 in the core runs) and 191 malformed tool
+  calls (155 of them repeats of the same call). Not investigated further here; the records keep
+  every gate round.

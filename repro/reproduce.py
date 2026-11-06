@@ -1,11 +1,12 @@
-"""One command that recomputes every table in paper/writeup.md (Sections 5.1, 5.2 and 5.4).
+"""One command that recomputes every table in paper/writeup.md (Sections 5.1, 5.2, 5.4 and 5.5).
 
   python3 repro/reproduce.py
 
 1. Verifies results/SHA256SUMS: every run record is the file the paper used.
 2. Recomputes the core experiment (360 runs, results/core/v5, v6, v8) and FinSWE-21 (72 runs,
    results/v10–v13): rates, the 40-call budget analysis, every contrast with its CI and p-values,
-   the interaction, the seed-2 counterfactual, and the per-kernel FinSWE-21 tables.
+   the interaction, the seed-2 counterfactual, and the per-kernel FinSWE-21 tables; and the
+   exploratory offline-enforcement kernel (126 runs, results/v14), paired with the core *_know arms.
 3. Compares each number with repro/expected.json, which holds what the paper prints, at the
    printed precision, and prints a markdown report.
 4. Redraws the figures (paper/figures/make_figures.py).
@@ -39,6 +40,8 @@ ARMS = ["A_prompt", "A_know", "A_retry", "B_generic", "C_domain", "C_know"]
 GATED = ["A_retry", "B_generic", "C_domain", "C_know"]
 CORE_KERNELS = ("v5", "v6", "v8")             # seeds 0, 1, 2 (pilot-log.md)
 FINSWE21_KERNELS = ("v10", "v11", "v12", "v13")
+V14 = "v14"                                    # exploratory: A_enforce / C_enforce (Kaggle version 15)
+ENFORCE_PAIRS = (("A_enforce", "A_know"), ("C_enforce", "C_know"), ("C_enforce", "A_enforce"))
 
 
 # ── checksums ──────────────────────────────────────────────────────────────────────────────
@@ -232,6 +235,45 @@ def finswe21_numbers(rows: list[dict]) -> dict:
                                       "holm_p": holm[cd_bg]}}
 
 
+def v14_numbers(v14: list[dict], core: list[dict], f21: list[dict]) -> dict:
+    """Section 5.5 (exploratory, not pre-registered): offline tool-level enforcement.
+
+    Core tasks: the v14 *_enforce arms are paired by (task, seed) with the *_know arms of v5/v6/v8
+    (non-concurrent controls). Contrasts use analyze.paired (diff, task-bootstrap CI, discordant
+    pairs) and a two-sided exact sign-flip p over task means. FinSWE-21 is reported as counts only.
+    """
+    valid = [r for r in v14 if not r.get("contaminated")]
+    v_core = [r for r in valid if not r["task"].startswith("PUB-")]
+    ctrl = [r for r in core if not r.get("contaminated") and r["condition"] in ("A_know", "C_know")]
+    rows = v_core + ctrl
+    arms = ["A_know", "A_enforce", "C_know", "C_enforce"]
+
+    def bounced_hygiene(r):
+        return any(any(f.startswith("G-HYGIENE") for f in g.get("failed", [])) for g in r["gate_rounds"])
+    out = {"runs": len(v14), "contaminated": len(v14) - len(valid),
+           "core_resolved": {a: sum(bool(r["resolved"]) for r in rows if r["condition"] == a) for a in arms},
+           "core_within_40": {a: sum(bool(r["resolved"] and r["tool_calls"] <= 40) for r in rows
+                                     if r["condition"] == a) for a in arms},
+           "finswe21_resolved": {a: sum(bool(r["resolved"]) for r in (valid if "enforce" in a else f21)
+                                        if r["task"].startswith("PUB-") and r["condition"] == a
+                                        and not r.get("contaminated")) for a in arms},
+           "contrasts": {},
+           "refusals": {a: {k: sum(r.get("enforced", {}).get(k, 0) for r in valid if r["condition"] == a)
+                            for k in ("scratch", "verify", "tests", "network")} for a in ("A_enforce", "C_enforce")},
+           "runs_refused": {a: sum(bool(r.get("enforced")) for r in valid if r["condition"] == a)
+                            for a in ("A_enforce", "C_enforce")},
+           "files_cleaned": sum(len(r.get("cleaned", [])) for r in valid),
+           "hygiene_bounced_runs": {a: sum(bounced_hygiene(r) for r in rows if r["condition"] == a)
+                                    for a in ("C_know", "C_enforce")}}
+    for x, y in ENFORCE_PAIRS:
+        pr = analyze.paired(rows, x, y)
+        tm = task_means(rows, pair(x, y))
+        out["contrasts"][f"{x} vs {y}"] = {"diff": 100 * pr["diff"], "ci": [100 * pr["ci"][0], 100 * pr["ci"][1]],
+                                           "x_only": pr["x_only"], "y_only": pr["y_only"],
+                                           "task_p_two_sided": exact_signflip(list(tm.values()), two_sided=True)}
+    return out
+
+
 # ── comparison with the paper ──────────────────────────────────────────────────────────────
 def decimals(x) -> int:
     s = repr(x)
@@ -275,11 +317,15 @@ def main() -> int:
     if all((ROOT / "results" / "core" / k / "results.jsonl").exists() for k in CORE_KERNELS):
         actual["core"] = core_numbers(load(CORE_KERNELS, relabel=False))
     actual["finswe21"] = finswe21_numbers(load(FINSWE21_KERNELS, relabel=True))
+    if "core" in actual and (ROOT / "results" / V14 / "results.jsonl").exists():
+        v14 = [json.loads(x) for x in (ROOT / "results" / V14 / "results.jsonl").read_text().splitlines() if x.strip()]
+        actual["v14"] = v14_numbers(v14, load(CORE_KERNELS, relabel=False), load(FINSWE21_KERNELS, relabel=True))
 
-    for part, title in (("core", "Core experiment (Sections 5.1–5.2)"), ("finswe21", "FinSWE-21 (Section 5.4)")):
+    for part, title in (("core", "Core experiment (Sections 5.1–5.2)"), ("finswe21", "FinSWE-21 (Section 5.4)"),
+                        ("v14", "Offline enforcement, v14 (Section 5.5, exploratory)")):
         report += ["", f"## {title}", "", "| quantity | paper | recomputed | |", "|---|---|---|---|"]
         if part not in actual:
-            report.append("| results/core/v5, v6, v8 | – | missing | ✗ |")
+            report.append(f"| inputs for {part} | – | missing | ✗ |")
             failures += 1
             continue
         for path, exp, got, ok in compare(expected[part], actual[part]):

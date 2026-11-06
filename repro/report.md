@@ -152,6 +152,56 @@
 | c_domain_vs_b_generic.placebo_p | 0.019 | 0.019 | ✓ |
 | c_domain_vs_b_generic.holm_p | 0.098 | 0.098 | ✓ |
 
+## Offline enforcement, v14 (Section 5.5, exploratory)
+
+| quantity | paper | recomputed | |
+|---|---|---|---|
+| runs | 126 | 126 | ✓ |
+| contaminated | 0 | 0 | ✓ |
+| core_resolved.A_know | 35 | 35 | ✓ |
+| core_resolved.A_enforce | 36 | 36 | ✓ |
+| core_resolved.C_know | 44 | 44 | ✓ |
+| core_resolved.C_enforce | 44 | 44 | ✓ |
+| core_within_40.A_know | 35 | 35 | ✓ |
+| core_within_40.A_enforce | 36 | 36 | ✓ |
+| core_within_40.C_know | 41 | 41 | ✓ |
+| core_within_40.C_enforce | 42 | 42 | ✓ |
+| finswe21_resolved.A_know | 6 | 6 | ✓ |
+| finswe21_resolved.A_enforce | 2 | 2 | ✓ |
+| finswe21_resolved.C_know | 11 | 11 | ✓ |
+| finswe21_resolved.C_enforce | 3 | 3 | ✓ |
+| contrasts.A_enforce vs A_know.diff | 1.7 | 1.667 | ✓ |
+| contrasts.A_enforce vs A_know.ci[0] | -13.3 | -13.333 | ✓ |
+| contrasts.A_enforce vs A_know.ci[1] | 16.7 | 16.667 | ✓ |
+| contrasts.A_enforce vs A_know.x_only | 9 | 9 | ✓ |
+| contrasts.A_enforce vs A_know.y_only | 8 | 8 | ✓ |
+| contrasts.A_enforce vs A_know.task_p_two_sided | 1.0 | 1.0 | ✓ |
+| contrasts.C_enforce vs C_know.diff | 0.0 | 0.0 | ✓ |
+| contrasts.C_enforce vs C_know.ci[0] | -15.0 | -15.0 | ✓ |
+| contrasts.C_enforce vs C_know.ci[1] | 16.7 | 16.667 | ✓ |
+| contrasts.C_enforce vs C_know.x_only | 9 | 9 | ✓ |
+| contrasts.C_enforce vs C_know.y_only | 9 | 9 | ✓ |
+| contrasts.C_enforce vs C_know.task_p_two_sided | 1.0 | 1.0 | ✓ |
+| contrasts.C_enforce vs A_enforce.diff | 13.3 | 13.333 | ✓ |
+| contrasts.C_enforce vs A_enforce.ci[0] | -1.7 | -1.667 | ✓ |
+| contrasts.C_enforce vs A_enforce.ci[1] | 30.0 | 30.0 | ✓ |
+| contrasts.C_enforce vs A_enforce.x_only | 13 | 13 | ✓ |
+| contrasts.C_enforce vs A_enforce.y_only | 5 | 5 | ✓ |
+| contrasts.C_enforce vs A_enforce.task_p_two_sided | 0.2 | 0.199 | ✓ |
+| refusals.A_enforce.scratch | 9 | 9 | ✓ |
+| refusals.A_enforce.verify | 4 | 4 | ✓ |
+| refusals.A_enforce.tests | 0 | 0 | ✓ |
+| refusals.A_enforce.network | 0 | 0 | ✓ |
+| refusals.C_enforce.scratch | 12 | 12 | ✓ |
+| refusals.C_enforce.verify | 10 | 10 | ✓ |
+| refusals.C_enforce.tests | 0 | 0 | ✓ |
+| refusals.C_enforce.network | 0 | 0 | ✓ |
+| runs_refused.A_enforce | 13 | 13 | ✓ |
+| runs_refused.C_enforce | 19 | 19 | ✓ |
+| files_cleaned | 0 | 0 | ✓ |
+| hygiene_bounced_runs.C_know | 41 | 41 | ✓ |
+| hygiene_bounced_runs.C_enforce | 6 | 6 | ✓ |
+
 ## Figures
 - redrawn: paper/figures/fig1–fig4 (.svg)
 
