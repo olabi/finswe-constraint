@@ -283,3 +283,24 @@ Noise floor 9.0% (pooled seed sd 5.7%, 3 seeds).
   repeated-call hint never fired; v13 cannot show whether it helps. Resolved of 3:
   A_prompt 1, A_know 1, A_retry 2, B_generic 2, C_domain 3, C_know 2. Every contrast is
   below the noise floor (84 pp).
+
+## v14 design (2026-11-06): offline tool-level enforcement (exploratory, not pre-registered)
+
+The competition runs offline, so a check can only live inside the harness. v14 asks whether
+rules enforced at the tool boundary help where the same rules stated in the prompt did not
+(scratch files left in the repository, test edits, install attempts, submitting unrun edits).
+
+- Arms: `A_enforce` = A_know + enforcement, `C_enforce` = C_know + enforcement. Same prompt
+  and invariant brief as the `*_know` arm, so `*_enforce` vs `*_know` isolates enforcement.
+- Enforcement (`Budget.enforce_tools / enforce_verify / enforce_cleanup`, test
+  `pilot/test_enforce.py`): writes to tests, `conftest.py` or packaging files are refused;
+  a new file outside the task's `code_dirs` is refused with a pointer to `/tmp`; install,
+  `curl`/`wget` and `git fetch|pull|clone|push` commands are refused; the first
+  `submit_patch` after an edit with no command since is bounced once; before the diff,
+  untracked files outside `code_dirs` are deleted and edited tests restored. Refusals and
+  cleaned files are recorded per run (`enforced`, `cleaned`).
+- Not included: `LLMConfig.guided_tools` (`tool_choice: "required"`). It changes decoding
+  and has not been tested on the kernel's vLLM, so it would confound the contrast.
+- Runs: 20 core tasks + FinSWE-21 × 2 arms × seeds 0–2 = 126 runs in one kernel. Controls are
+  not re-run: `*_know` of v5/v6/v8 (core, seeds 0/1/2) and v10–v13 (FinSWE-21), paired by
+  task × seed. Non-concurrent controls and a post-hoc design: results are descriptive.

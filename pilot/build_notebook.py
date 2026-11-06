@@ -15,7 +15,7 @@ def code(s):
 
 
 md(r"""
-# FinSWE-Constraint · pilot runner — *Knowing Is Not Enforcing*
+# FinSWE-Constraint · pilot runner — *Can Is Not Should*
 
 Does an **enforced executable gate** make the competition model (`gemma-4-31b-it-qat-w4a16-ct`)
 a more reliable developer agent than prompt-level best practices alone?
@@ -28,6 +28,7 @@ a more reliable developer agent than prompt-level best practices alone?
 | **A_retry** | placebo: first submit bounced with a content-free "re-check" message + the same extra calls |
 | **A_know** | no gate, but the C gate's invariants (title / scenario / expected) are stated in the prompt |
 | **C_know** | C_domain + the same invariant statement up front — **A_know vs C_know isolates enforcement** |
+| **A_enforce** / **C_enforce** | v14, exploratory: A_know / C_know + offline tool-level enforcement (test edits, scratch files in the repo and network commands refused; an unverified edit bounced once at submit; stray files and test edits removed before the diff) |
 
 A failed gate returns `VerificationFailed` with structured feedback (scenario / expected /
 observed), and the session continues for up to `correction_rounds`. Scoring always uses
@@ -48,9 +49,12 @@ pipeline and size effects, not to claim them.
 code(r"""
 CFG = {
     # 2x2 knowing × enforcing (A_know vs C_know is the PRIMARY contrast) + controls
-    "conditions": ["A_prompt", "A_know", "A_retry", "B_generic", "C_domain", "C_know"],
-    "tasks": ["PUB-21-ta-unpadded-date"],  # None = all; v9 runs only the public task FinSWE-21
-    "seeds": [0, 1, 2],            # v5–v8: one seed per version (20 core tasks); v9: FinSWE-21 × 3 seeds
+    # v5–v13: ["A_prompt", "A_know", "A_retry", "B_generic", "C_domain", "C_know"]
+    # v14 (exploratory): the two offline-enforcement arms only; their controls are A_know / C_know
+    # of v5/v6/v8 (core, seeds 0/1/2) and v10–v13 (FinSWE-21), paired by task × seed
+    "conditions": ["A_enforce", "C_enforce"],
+    "tasks": None,                 # None = all; v9–v13 ran only FinSWE-21; v14: 20 core + FinSWE-21
+    "seeds": [0, 1, 2],            # v5–v8: one seed per version (20 core tasks); v9+: 3 seeds
     "budget": dict(max_tool_calls=40, max_minutes=12.0, max_turns=80, command_timeout_s=300,
                    correction_rounds=2, correction_calls=10, placebo_rounds=1,
                    context_limit=32768, max_output_tokens=8192, compact_at=24000),
@@ -58,7 +62,7 @@ CFG = {
     "model_dir": None,             # None = auto-discover under /kaggle/input
     "vllm": dict(gpu_memory_utilization=0.90, max_model_len=32768, port=8000,
                  startup_timeout_s=2400),
-    "max_runs": None,              # 20 tasks × 6 conditions = 120 runs per seed; v9: 1 × 6 × 3 = 18
+    "max_runs": None,              # 20 tasks × 6 conditions = 120 runs per seed; v9: 1 × 6 × 3 = 18; v14: 21 × 2 × 3 = 126
     "public_env_wheels": {"tradingagents": "finswe-tradingagents-wheels"},  # env → wheel dataset
     "out_dir": "/kaggle/working/finswe-pilot",
 }
@@ -394,11 +398,17 @@ for c, rs in sorted(by.items()):
     bad = sum(r.get("malformed_calls", 0) for r in rs)
     print(f"{c:<10} runs {len(rs):>2} | gate fired {gate:>2} | errored checks {errd:>2} | invariant brief in prompt {know:>2}"
           f" | edit tiers {dict(tiers)} | malformed tool calls {bad}")
-    if c in ("A_know", "C_know"):  # control tasks have no domain invariants → no brief by design
+    if c in fp.KNOW:  # control tasks have no domain invariants → no brief by design
         need = sum(1 for r in rs if not r["task"].startswith("FSC-C"))
         assert know == need, f"{c}: invariant brief missing from some non-control prompts"
-    if c in ("A_prompt", "A_know"):
+    if c in ("A_prompt", "A_know", "A_enforce"):
         assert gate == 0, f"{c}: gate must never fire"
+    if c in fp.ENFORCE:  # v14: the offline-enforcement switches actually ran
+        ref = collections.Counter()
+        for r in rs:
+            ref.update(r.get("enforced", {}))
+        print(f"{'':<10} enforcement refusals {dict(ref)} | runs with files cleaned "
+              f"{sum(1 for r in rs if r.get('cleaned'))}")
     engines = {r.get("edit_engine") for r in rs if r.get("edit_engine")}
     assert engines <= {"swegemma"}, f"{c}: edits must use the harness engine, got {engines}"
 print()

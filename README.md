@@ -1,6 +1,6 @@
 # FinSWE-Constraint
 
-Code, tasks and run records for **Knowing Is Not Enforcing** (`paper/writeup.md`), a pre-registered study of submission-time domain gates for a self-hosted Gemma 4 coding agent (Gemma 4 Developer Agent Paper Track).
+Code, tasks and run records for **Can Is Not Should** (`paper/writeup.md`), a pre-registered study of submission-time domain gates for a self-hosted Gemma 4 coding agent (Gemma 4 Developer Agent Paper Track).
 
 ## Reproduce the paper's numbers
 

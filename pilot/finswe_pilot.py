@@ -35,16 +35,21 @@ import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Callable
 
 CONDITIONS = {"A_prompt": None, "A_know": None, "A_retry": "placebo", "B_generic": "generic",
-              "C_domain": "all", "C_know": "all"}
+              "C_domain": "all", "C_know": "all",
+              "A_enforce": None, "C_enforce": "all"}
 # *_know conditions get the domain invariants the C gate checks (id / title / scenario /
 # expected, generated from the verifier itself) in the user prompt up front. A_know vs
 # C_know isolates enforcement: same knowledge, gate on/off ("knowing is not enforcing").
-KNOW = {"A_know", "C_know"}
+KNOW = {"A_know", "C_know", "A_enforce", "C_enforce"}
+# v14 (exploratory, added after the pre-registered analysis): *_enforce = *_know plus the offline
+# tool-level enforcement switches (Budget.enforce_tools / enforce_verify / enforce_cleanup).
+# Same prompt and knowledge as *_know, so *_enforce vs *_know isolates tool-level enforcement.
+ENFORCE = {"A_enforce", "C_enforce"}
 # A_retry is the placebo control: the first submit_patch is bounced with a content-free
 # "re-check your patch" message and the same extra tool calls a failed gate grants,
 # so B/C gains can be separated from "one more chance + more budget".
@@ -54,6 +59,11 @@ PLACEBO_MSG = ("Patch NOT submitted yet: final review step. Re-check your change
 # Commands that reach outside the workspace toward answers/verifiers invalidate the run.
 CONTAMINATION = re.compile(r"/kaggle/input|/kaggle/working|finswe|hidden\.b64|tests\.patch|"
                            r"gold\.patch|verifiers/domain|eval\.json", re.I)
+
+# Offline enforcement: commands an offline agent must not run (the image is pre-built, no network).
+NETWORK_CMD = re.compile(r"\b(pip3?|uv|conda|apt(-get)?)\s+(install|add|sync)\b|\b(curl|wget)\b|"
+                         r"\bgit\s+(push|clone|fetch|pull)\b")
+PROTECTED_TEST = re.compile(r"(^|/)(tests?/|conftest\.py$|pytest\.ini$|setup\.cfg$|tox\.ini$|pyproject\.toml$)")
 
 # Harness limits (HARNESS_README §5.2 / §6)
 MAX_STDOUT = 5000
@@ -81,6 +91,11 @@ class Budget:
     context_limit: int = 32768
     max_output_tokens: int = 8192
     compact_at: int = 24000  # prompt tokens: elide oldest tool outputs beyond this
+    # Offline enforcement (AGENTS.md idea applied to the agent itself). All off by default, so the
+    # reported conditions are unchanged; each can be switched on for a new condition or a submission.
+    enforce_tools: bool = False    # refuse test edits, scratch files in the repo, network commands
+    enforce_verify: bool = False   # submit_patch needs a run_command after the last edit (once per edit)
+    enforce_cleanup: bool = False  # before scoring/gating: drop stray files, restore edited tests
 
 
 # ── data ──────────────────────────────────────────────────────────────────
@@ -220,6 +235,8 @@ class Session:
 
     def __init__(self, task: Task, condition: str, work: Path, budget: Budget,
                  verifier: Callable[[str, Path, str], dict] | None, python: str):
+        if condition in ENFORCE:
+            budget = replace(budget, enforce_tools=True, enforce_verify=True, enforce_cleanup=True)
         self.task, self.condition, self.work, self.b = task, condition, work, budget
         self.verifier, self.python = verifier, python
         self.level = CONDITIONS[condition]
@@ -242,6 +259,12 @@ class Session:
         self._last_malformed: tuple[str, str] | None = None
         self.edit_engine = ""
         self.first_patch: str | None = None
+        self.code_dirs = tuple(task.spec.get("code_dirs", ["ai_trader/", "tests/"]))
+        self.enforced: dict[str, int] = collections.Counter()  # refusals by rule (enforce_* only)
+        self.cleaned: list[str] = []
+        self._last_edit_call = -1     # tool-call index of the last successful edit/write
+        self._last_command_call = -1  # tool-call index of the last run_command
+        self._verify_nudged_for = -1  # edit index a verify refusal was already given for
 
     # helpers
     def remaining_s(self) -> float:
@@ -269,6 +292,40 @@ class Session:
             return json.dumps(d, ensure_ascii=False)
         return payload
 
+    def _refuse(self, rule: str, msg: str) -> str:
+        self.enforced[rule] += 1
+        return _err("PolicyRefused", msg, rule=rule)
+
+    def _write_policy(self, filepath: str, creating: bool) -> str | None:
+        """enforce_tools: the hard rules of system.md, applied before the write instead of after."""
+        if not self.b.enforce_tools:
+            return None
+        rel = str(self._path(filepath).relative_to(self.work.resolve()))
+        if PROTECTED_TEST.search(rel):
+            return self._refuse("tests", f"Refused: {rel} is a test or test-config file. Tests must not be edited, "
+                                         "added or deleted; the hidden tests are applied after you finish.")
+        if creating and not rel.startswith(self.code_dirs):
+            return self._refuse("scratch", f"Refused: {rel} would be a new file outside "
+                                           f"{', '.join(self.code_dirs)} and would end up in your patch. Create "
+                                           "scratch files with run_command, e.g. cat > /tmp/repro.py <<'EOF' … EOF.")
+        return None
+
+    def _cleanup(self) -> None:
+        """enforce_cleanup: remove what the patch must never carry, deterministically."""
+        if not self.b.enforce_cleanup:
+            return
+        sh(["git", "add", "-N", "."], cwd=self.work)
+        changed = sh(["git", "diff", "--name-only", "HEAD"], cwd=self.work).stdout.split()
+        new = set(sh(["git", "diff", "--name-only", "--diff-filter=A", "HEAD"], cwd=self.work).stdout.split())
+        for f in changed:
+            if PROTECTED_TEST.search(f) or (f in new and not f.startswith(self.code_dirs)):
+                if f in new:
+                    sh(["git", "rm", "-q", "--cached", "-f", f], cwd=self.work)
+                    (self.work / f).unlink(missing_ok=True)
+                else:
+                    sh(["git", "checkout", "HEAD", "--", f], cwd=self.work)
+                self.cleaned.append(f)
+
     def _diff(self) -> str:
         sh(["git", "add", "-N", "."], cwd=self.work)
         return sh(["git", "diff", "HEAD"], cwd=self.work).stdout
@@ -277,6 +334,10 @@ class Session:
     def run_command(self, command: str) -> str:
         if CONTAMINATION.search(command):
             self.contaminated.append(command[:300])
+        if self.b.enforce_tools and NETWORK_CMD.search(command):
+            return self._refuse("network", "Refused: the environment is offline and pre-built. Do not install "
+                                           "packages or fetch anything; work with what is installed.")
+        self._last_command_call = self.tool_calls
         t = min(self.b.command_timeout_s, max(5, int(self.remaining_s())))
         try:
             r = sh(["/bin/bash", "-c", self._rewrite(command)], cwd=self.work, timeout=t,
@@ -305,6 +366,8 @@ class Session:
                   allow_multiple: bool = False) -> str:
         """Harness-identical: swegemma.edit.apply_replacement (exact → flexible → regex → unescaped)."""
         try:
+            if (refused := self._write_policy(filepath, creating=False)) is not None:
+                return refused
             apply_replacement, engine = harness_apply_replacement()
             p = self._path(filepath)
             if not p.exists():
@@ -323,6 +386,7 @@ class Session:
             return _err("FileEditError", str(e))
         self.edit_tiers[res.strategy] += 1
         self.edit_engine = engine
+        self._last_edit_call = self.tool_calls
         diff = res.diff[:MAX_STDOUT]
         return _ok(filepath=filepath, occurrences=res.occurrences, strategy=res.strategy,
                    diff=diff, is_truncated=len(res.diff) > MAX_STDOUT)
@@ -331,9 +395,12 @@ class Session:
         """Harness-identical: content is written as given (no unescaping)."""
         try:
             p = self._path(filepath)
+            if (refused := self._write_policy(filepath, creating=not p.exists())) is not None:
+                return refused
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(content, encoding="utf-8")
             self.edit_tiers["write"] += 1
+            self._last_edit_call = self.tool_calls
         except Exception as e:
             return _err("FileWriteError", str(e))
         return _ok(filepath=filepath, size=len(content))
@@ -344,6 +411,13 @@ class Session:
                    patch_submitted=self.patch_submitted, gate_rounds_used=len(self.gate_rounds))
 
     def submit_patch(self) -> str:
+        if (self.b.enforce_verify and self._last_edit_call > self._last_command_call
+                and self._verify_nudged_for != self._last_edit_call and self.tool_calls < self.max_calls):
+            self._verify_nudged_for = self._last_edit_call
+            return self._refuse("verify", "Not submitted: you edited files after your last command, so the "
+                                          "change has not been run. Verify it (e.g. run the relevant tests "
+                                          "with run_command), then call submit_patch again.")
+        self._cleanup()
         patch = self._diff()
         if self.first_patch is None:  # counterfactual: what the agent would have shipped ungated
             self.first_patch = patch
@@ -467,11 +541,15 @@ class LLMConfig:
     enable_thinking: bool = False
     timeout_s: int = 600
     seed: int | None = None
+    # tool_choice "required": vLLM then decodes the tool call under a JSON-schema grammar built from
+    # the tool specs, so arguments cannot come out malformed (bypasses the text tool parser).
+    guided_tools: bool = False
 
 
 def vllm_policy(cfg: LLMConfig) -> Callable[[list, list], dict]:
     def call(messages: list, tools: list) -> dict:
-        body = {"model": cfg.model, "messages": messages, "tools": tools, "tool_choice": "auto",
+        body = {"model": cfg.model, "messages": messages, "tools": tools,
+                "tool_choice": "required" if cfg.guided_tools else "auto",
                 "temperature": cfg.temperature, "top_p": cfg.top_p, "max_tokens": cfg.max_tokens,
                 "top_k": cfg.top_k,
                 "chat_template_kwargs": {"enable_thinking": cfg.enable_thinking}}
@@ -706,6 +784,8 @@ class RunRecord:
     edit_engine: str = ""
     resolved_at_first_submit: bool | None = None  # hidden-test score of the first submitted patch
     repeated_malformed: int = 0
+    enforced: dict = field(default_factory=dict)  # offline-enforcement refusals by rule
+    cleaned: list = field(default_factory=list)    # files enforce_cleanup removed or restored
 
 
 def run_one(task: Task, condition: str, seed: int, policy, *, root: Path, system_prompt: str,
@@ -731,7 +811,7 @@ def run_one(task: Task, condition: str, seed: int, policy, *, root: Path, system
                      round(time.time() - s.t0, 1), g, g[0]["failed"] if g else [],
                      (not g[-1]["failed"]) if g else None, s.contaminated, sc.get("env_excluded", []),
                      s.know_brief_chars, dict(s.edit_tiers), s.malformed_calls, s.edit_engine, first,
-                     s.repeated_malformed)
+                     s.repeated_malformed, dict(s.enforced), s.cleaned)
 
 
 def make_verifier(python: str):
