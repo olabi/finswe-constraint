@@ -10,6 +10,12 @@ python3 repro/reproduce.py
 
 This verifies `results/SHA256SUMS` and recomputes every number in Sections 5.1, 5.2 and 5.4 from the run records. It compares each with the printed value (139 values) and redraws Figures 1–4. It needs only the Python standard library. See `repro/README.md`.
 
+## Contributing (people and AI agents)
+
+Every change works under the contract in [`AGENTS.md`](AGENTS.md). `tools/contract_check.py` checks it.
+A Claude Code hook refuses commits and pushes that break it, and the `contract` CI job refuses pull
+requests that break it or that lack the signed checklist.
+
 ## Layout
 
 | Path | Contents |
