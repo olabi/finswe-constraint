@@ -79,7 +79,7 @@ def main() -> int:
     assert status(s.dispatch("write_file", {"filepath": "pkg/core.py", "content": "def f():\n    return 2\n"})) == "ok"
     for cmd in ("pip install requests", "uv pip install x", "curl -s http://x", "git fetch origin"):
         assert status(s.dispatch("run_command", {"command": cmd})) == "network", cmd
-    assert status(s.dispatch("run_command", {"command": "python -c 'print(1)' && git status --short"})) == "ok"
+    assert status(s.dispatch("run_command", {"command": "echo ran && git status --short"})) == "ok"
     assert dict(s.enforced) == {"tests": 3, "scratch": 1, "network": 4}, s.enforced
     assert not (s.work / "repro.py").exists() and "True" in (s.work / "tests" / "test_core.py").read_text()
 
@@ -90,7 +90,7 @@ def main() -> int:
     assert status(s.dispatch("submit_patch", {})) == "ok"  # once per edit, never a dead end
     s = session(enforce_verify=True)
     s.dispatch("edit_file", {"filepath": "pkg/core.py", "old_string": "return 1", "new_string": "return 2"})
-    s.dispatch("run_command", {"command": "python -m py_compile pkg/core.py"})
+    s.dispatch("run_command", {"command": f"{sys.executable} -m py_compile pkg/core.py"})
     assert status(s.dispatch("submit_patch", {})) == "ok" and s.enforced.get("verify", 0) == 0
 
     # enforce_cleanup: stray file and test edit never reach the patch, the fix does

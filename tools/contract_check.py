@@ -106,6 +106,13 @@ def c3_paper():
             **{k: [f21["resolved"][k][a] for a in arms] for k in ("v10", "v11", "v12", "v13")},
             "All four (of 12)": [sum(f21["resolved"][k][a] for k in f21["resolved"]) for a in arms],
             "… of which within 40 calls": [f21["within_40"][a] for a in arms]}
+    v14 = exp.get("v14")
+    if v14:  # Section 5.5 (exploratory offline-enforcement kernel)
+        e_arms = ["A_know", "A_enforce", "C_know", "C_enforce"]
+        want["Resolved (of 60)"] = [v14["core_resolved"][a] for a in e_arms]
+        want["Resolved within 40 calls (of 60)"] = [v14["core_within_40"][a] for a in e_arms]
+        for name, c in v14["contrasts"].items():
+            want[name] = [c["diff"], *c["ci"], c["x_only"], c["y_only"], c["task_p_two_sided"]]
     bad = []
     for label, values in want.items():
         got = _row(text, label)
