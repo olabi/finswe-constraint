@@ -203,6 +203,6 @@
 | hygiene_bounced_runs.C_enforce | 6 | 6 | ✓ |
 
 ## Figures
-- redrawn: paper/figures/fig1–fig4 (.svg)
+- redrawn: paper/figures/fig1–fig5 (.svg)
 
 **ALL MATCH**
