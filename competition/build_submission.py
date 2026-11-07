@@ -1,6 +1,7 @@
 """Build submission.zip for the Kaggle competition gemma-4-developer-agent. Stdlib only.
 
-  python3 competition/build_submission.py --sample <path to sample_submission/> [--out submission.zip]
+  python3 competition/build_submission.py --src competition/submission_v2 --out submission.zip
+  python3 competition/build_submission.py --sample <path to sample_submission/>   # v1 (needs the LoRA adapters)
 
 The configs and prompts are in competition/submission/. The two LoRA adapters are copied from
 the competition's own sample_submission/adapters/ (competition data; not redistributed here).
@@ -70,13 +71,15 @@ def check(root: Path) -> list[str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--sample", type=Path, required=True, help="the competition's sample_submission/ directory")
+    ap.add_argument("--src", type=Path, default=SRC, help="submission source (default: competition/submission, v1)")
+    ap.add_argument("--sample", type=Path, help="the competition's sample_submission/ (only if the source uses adapters)")
     ap.add_argument("--out", type=Path, default=Path("submission.zip"))
     a = ap.parse_args()
     with tempfile.TemporaryDirectory() as tmp:
         build = Path(tmp) / "submission"
-        shutil.copytree(SRC, build)
-        shutil.copytree(a.sample / "adapters", build / "adapters")
+        shutil.copytree(a.src, build)
+        if a.sample is not None:
+            shutil.copytree(a.sample / "adapters", build / "adapters")
         bad = check(build)
         for b in bad:
             print(f"✗ {b}")

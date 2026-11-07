@@ -26,3 +26,31 @@ python3 competition/build_submission.py --sample <competition data>/sample_submi
 The adapters come from the competition's `sample_submission/adapters/` and are not stored here.
 The script checks the host's documented limits and writes the zip; it never submits.
 Submitting (`kaggle competitions submit`) is an outward action that needs the user's go-ahead (C6).
+
+## Submissions
+
+| Date | Kaggle id | Package | Public score |
+|---|---|---|---|
+| 2026-11-07 | 58076537 | v1 `competition/submission` (repo 270e19a) | 0.08 |
+
+Earlier entries from this account (2026-09-28 to 09-30, GUAM AGT-01) all scored 0.00.
+
+## v2 (`competition/submission_v2`, not yet submitted)
+
+v2 starts from the public notebook "Gemma 4 | Budget-Aware Coding Agent - Efficient Navigation",
+which adapts matterhorn3838's "Gemma 4 SuperAgent"
+(https://www.kaggle.com/code/matterhorn3838/gemma-4-superagent). That line of configs scores
+about 0.18–0.22 on the public leaderboard, and its prompt is used here with credit. v1 differs
+from it in four ways: an extra sub-agent with graph tools, thinking off, LoRA adapters, and
+40 calls / 12 min (the public notebook keeps 28 calls / 8 min inside the global 12-hour limit).
+v2 keeps the public configuration and changes two things:
+
+1. **The graph tools are not declared.** The public prompt forbids them ("they return nothing
+   useful"), but declaring them makes the harness advertise them in the first message.
+2. **The final check deletes stray untracked files.** The FinSWE-Constraint pilot showed agents
+   leaving scratch files in the repository even when told not to (6 of 7 tasks; 41 of 60 gated
+   core runs bounced on hygiene), and untracked files are part of the submitted patch.
+
+```bash
+python3 competition/build_submission.py --src competition/submission_v2 --out submission.zip
+```
