@@ -1,0 +1,21 @@
+# Root agent. Same tree as the official sample_submission (coder + read-only analyzer as an
+# AgentTool, two LoRA adapters copied from the sample by build_submission.py), with the prompt,
+# sampling and budget validated in the FinSWE-Constraint pilot (360 + 72 + 126 runs).
+name: finswe_constraint_agent
+model: gemma-4-31b-it-qat-w4a16-ct
+adapter: main_lora
+instruction: !include prompts/system.md
+tools:
+  - run_command
+  - read_file
+  - edit_file
+  - write_file
+  - get_status
+  - submit_patch
+  - get_code_neighbors
+  - search_similar_code
+  - get_code_subgraph
+  - agent_tool:
+      config_path: sub_agents/code_analyzer.yaml
+      skip_summarization: true
+generate_content_config: !include configs/sampling.yaml
