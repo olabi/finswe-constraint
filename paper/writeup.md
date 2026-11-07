@@ -24,6 +24,7 @@ Two gaps follow. Passing tests shows what code *can* do, not what it *should* do
 1. **A benchmark of domain-constrained repair tasks with provenance.** Most tasks reproduce real incidents, and each ships two disjoint check sets: feedback verifiers the gate runs, and hidden tests used only for scoring. One additional task is derived from a public Apache-2.0 repository so that at least one task is independently verifiable.
 2. **A pre-registered comparison of gate policies with placebo arms**, re-analysed at the task level, with a budget sensitivity analysis and a within-run counterfactual that removes between-run sampling noise.
 3. **Measured interface failure modes of self-hosted SWE agents** (argument escaping, hygiene, evaluation coupling), each of which could silently invalidate an agent comparison, and how we detected and neutralised them.
+4. **An offline enforcement layer and an exploratory test of it.** Because the competition runs without network access, every check has to live inside the harness. We add tool-level refusals, a verify-before-submit bounce and a pre-diff cleanup, and run them as two further arms (126 runs, Section 5.5).
 
 ---
 
@@ -111,6 +112,8 @@ A pilot exposed verifier under-specification: one verifier passed a patch that f
 | B_generic | – | syntax, hygiene, visible-test regressions; ≤ 2 bounces | 60 |
 | C_domain | – | B + domain verifier; ≤ 2 bounces | 60 |
 | C_know | ✓ | B + domain verifier; ≤ 2 bounces | 60 |
+
+Section 5.5 adds two exploratory arms after the main analysis, A_enforce and C_enforce: A_know and C_know with tool-level enforcement of the process rules. They are described there and are not part of the 360 runs or the pre-registered analysis.
 
 Contrasts therefore compare *gate policies* (feedback plus extra calls and attempts), not feedback alone. A_retry controls for one extra attempt but not for a second round. The `*_know` brief is generated from the verifier itself (title / scenario / expected, never observed), so A_know knows exactly what C_know checks.
 
@@ -249,6 +252,10 @@ A_enforce is A_know plus these switches, and C_enforce is C_know plus them. One 
 - **The violations they target went down.** The hygiene check bounced 41 of 60 C_know runs and 6 of 60 C_enforce runs. Part of that drop belongs to the v12 prompt fix, which the core C_know runs did not have, so we do not attribute it to enforcement alone. That agents still tried to write 21 scratch files into the repository under the corrected prompt is direct evidence of the soft-rule gap.
 - **Resolution did not move.** Enforcing the process rules changed hidden-test resolution by +1.7 and 0.0 pp, with the discordant pairs split almost evenly. Within this kernel, the domain gate on top of the same enforcement (C_enforce vs A_enforce) is +13.3 pp, the same size as the primary contrast of Section 5.1 (+15.0 pp), but its interval includes zero.
 
+![Two panels: core runs resolved of 60, unchanged by enforcement (A 35 to 36, C 44 to 44); hygiene-check bounces of 60, from 41 to 6](figures/fig5-enforcement.svg)
+
+*Figure 5. Process enforcement in v14 against the core `*_know` runs, paired by task and seed. Resolution does not move; the violation the switches target falls, partly because v14 also carries the v12 prompt fix. Exploratory.*
+
 The reading is consistent with the title. Enforcing how the agent works removed the hygiene failures it was aimed at, but a clean, compiled, tested patch is not therefore a correct one. What changed outcomes was checking the domain invariant the patch had to keep.
 
 ---
@@ -258,6 +265,7 @@ The reading is consistent with the title. Enforcing how the agent works removed 
 - **Budget confound.** Gates add calls and attempts. The decisive design runs two continuations from the same first-submit state with identical extra calls and time: one gets verifier feedback, one gets content-free feedback. That design is prepared but not run, because the GPU quota was exhausted.
 - **Hidden tests are not isolated from the agent.** They ship zlib+base64-encoded in the input dataset. `read_file` is confined to the workspace, but `run_command` is a general shell. Contamination is detected by a regex over commands, which a determined agent could evade. "0 flagged" is not proof of no access. A separate scoring container (as in the competition's own two-container design) would close this.
 - **Scale.** One repository, 20 tasks, 3 seeds. Six tasks resolved in all 18 of their runs and one in none, so 13 tasks carry the signal. Counterfactuals exist for one seed only. The public task (FinSWE-21) shows that the bug class recurs outside our repository. Its 72 runs (Section 5.4) are post hoc, on one task and partly under a changed harness; they add no statistical power to Section 5.1.
+- **The enforcement kernel (Section 5.5) has weak controls.** Its `*_know` controls are the core runs from earlier kernels, not concurrent runs, and the v14 harness also carries the v12–v13 changes (prompt wording, context retry, repeated-call hint). One kernel, three seeds and no pre-registration make it descriptive. Guided tool-call decoding (`tool_choice: "required"`) is implemented but was not run, because it changes decoding and was untested on the kernel's vLLM.
 - **Verifiers are hand-written and can be under-specified**, as one was. The TradingAgents incident shows the same failure in a widely used project. We report verifier–test disagreement as a first-class metric and adopt the design rule of Section 3.4.
 - **Harness.** Our loop mirrors the competition harness but is not the official leaderboard runner. We use a single agent without adapters.
 
@@ -273,7 +281,7 @@ Under a pre-registered rule, a self-hosted Gemma 4 agent resolved more domain-co
 
 Everything below is in the repository ([olabi/finswe-constraint](https://github.com/olabi/finswe-constraint)) or attached to the Kaggle notebook `kmmmvs/finswe-constraint-pilot` (datasets `kmmmvs/finswe-pilot-data` and `kmmmvs/finswe-tradingagents-wheels`). The trading bot's source repository is private and is not released: core tasks ship as sanitized snapshots. The competition's harness source (`swegemma`, `adk-eval-core`) is not included; participants obtain it from Kaggle.
 
-- **One command recomputes every table.** `python3 repro/reproduce.py` verifies the checksums, recomputes every number in Sections 5.1, 5.2, 5.4 and 5.5 from the run records, compares each with the value printed here, and redraws Figures 1–4. All 184 values match. The post-hoc analyses of Section 4 (exact task-level sign-flip, interaction, 40-call cap) are defined in that script; the pre-registered ones are `pilot/analyze.py`.
+- **One command recomputes every table.** `python3 repro/reproduce.py` verifies the checksums, recomputes every number in Sections 5.1, 5.2, 5.4 and 5.5 from the run records, compares each with the value printed here, and redraws Figures 1–5. All 184 values match. The post-hoc analyses of Section 4 (exact task-level sign-flip, interaction, 40-call cap) are defined in that script; the pre-registered ones are `pilot/analyze.py`.
 - **Run records, with SHA-256.** The 360 core runs are in `results/core/v5`, `v6` and `v8` (seeds 0, 1, 2; one kernel version each). The core runs' trajectories are withheld with the gold patches, because a resolved run's patch is itself a solution; the run records keep every outcome, call count and gate round. The 72 FinSWE-21 runs are in `results/v10`–`v13`, and the 126 runs of Section 5.5 in `results/v14`. `results/SHA256SUMS` covers every record.
 - **Environment lock.** `repro/environment.lock.json` records the kernel's Docker image digest, machine, model and dataset sources, every file of the three datasets, the 93 TradingAgents wheels with SHA-256, the Python, vLLM and git versions, and the source commits.
 - **Tasks and harness.** `tasks/` holds the 20 core tasks and FinSWE-21. The core tasks' gold patches are withheld, so that the benchmark stays usable; FinSWE-21 ships its gold, which is upstream's public fix. `harness/` builds, gates and selftests the tasks; `pilot/` holds the runner, system prompt, notebook and analysis. FinSWE-21 rebuilds from the upstream Apache-2.0 repository with `harness/public_task.py`, without any private material.

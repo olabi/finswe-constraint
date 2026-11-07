@@ -9,7 +9,7 @@
    exploratory offline-enforcement kernel (126 runs, results/v14), paired with the core *_know arms.
 3. Compares each number with repro/expected.json, which holds what the paper prints, at the
    printed precision, and prints a markdown report.
-4. Redraws the figures (paper/figures/make_figures.py).
+4. Redraws Figures 1–5 (paper/figures/make_figures.py).
 
 Exit status 0 only if every checksum and every number matches. Stdlib only.
 
@@ -333,7 +333,7 @@ def main() -> int:
             failures += not ok
 
     runpy.run_path(str(ROOT / "paper" / "figures" / "make_figures.py"), run_name="__main__")
-    report += ["", "## Figures", "- redrawn: paper/figures/fig1–fig4 (.svg)", "",
+    report += ["", "## Figures", "- redrawn: paper/figures/fig1–fig5 (.svg)", "",
                f"**{'ALL MATCH' if not failures else f'{failures} MISMATCH(ES)'}**"]
     (ROOT / "repro" / "report.md").write_text("\n".join(report) + "\n")
     print("\n".join(report))

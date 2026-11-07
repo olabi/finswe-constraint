@@ -8,7 +8,7 @@ Code, tasks and run records for **Can Is Not Should** (`paper/writeup.md`), a pr
 python3 repro/reproduce.py
 ```
 
-This verifies `results/SHA256SUMS` and recomputes every number in Sections 5.1, 5.2 and 5.4 from the run records. It compares each with the printed value (139 values) and redraws Figures 1–4. It needs only the Python standard library. See `repro/README.md`.
+This verifies `results/SHA256SUMS` and recomputes every number in Sections 5.1, 5.2, 5.4 and 5.5 from the run records. It compares each with the printed value (184 values) and redraws Figures 1–5. It needs only the Python standard library. See `repro/README.md`.
 
 ## Contributing (people and AI agents)
 
@@ -24,7 +24,7 @@ requests that break it or that lack the signed checklist.
 | `tasks/` | 20 core tasks (sanitized from a private trading bot) and the public task FinSWE-21 (`PUB-21-ta-unpadded-date`): issue, hidden tests, FAIL_TO_PASS / PASS_TO_PASS lists |
 | `harness/` | task build and scoring (`finswe.py`), submission gates and domain verifiers (`feedback.py`, `verifiers/`), selftest (`verify.py`), FinSWE-21 setup (`public_task.py`) |
 | `pilot/` | agent runner, system prompt, Kaggle notebook and its builder, pre-registered analysis (`analyze.py`), dataset export |
-| `results/` | run records: 360 core runs (`core/v5`, `v6`, `v8`) and 72 FinSWE-21 runs (`v10`–`v13`) |
+| `results/` | run records: 360 core runs (`core/v5`, `v6`, `v8`) and 72 FinSWE-21 runs (`v10`–`v13`), and 126 exploratory enforcement runs (`v14`) |
 | `repro/` | `reproduce.py`, checksums, environment lock |
 | `data/jepq-study/` | the JEPQ/QQQ calibration study behind the income-ETF verifiers (the collected news headlines are not redistributed; `pivot_news.py` and `daily_theme_news.py` re-collect them) |
 

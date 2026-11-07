@@ -1,9 +1,10 @@
 """Figures for paper/writeup.md, written as plain SVG (stdlib only).
 
 Figures 1–2 use the writeup's own tables (Section 5.1). Figures 3–4 are recomputed here from
-results/v10–v13 (Section 5.4), so a figure can never drift from the text it illustrates.
+results/v10–v13 (Section 5.4), and Figure 5 from results/v14 with the core *_know arms (Section 5.5,
+via repro/reproduce.py), so a figure can never drift from the text it illustrates.
 
-  python3 paper/figures/make_figures.py      # writes fig1–fig4 *.svg next to this file
+  python3 paper/figures/make_figures.py      # writes fig1–fig5 *.svg next to this file
 """
 
 from __future__ import annotations
@@ -290,6 +291,59 @@ def fig4() -> Path:
     return s.save("fig4-finswe21-contrasts.svg")
 
 
+# ── Figure 5: process enforcement (v14): violations down, resolution flat ─────────────────
+def fig5() -> Path:
+    sys.path.insert(0, str(ROOT / "repro"))
+    import reproduce as R  # noqa: PLC0415
+
+    v14 = [json.loads(x) for x in (ROOT / "results/v14/results.jsonl").read_text().splitlines() if x.strip()]
+    n = R.v14_numbers(v14, R.load(R.CORE_KERNELS, relabel=False), R.load(R.FINSWE21_KERNELS, relabel=True))
+    res, hyg, ref = n["core_resolved"], n["hygiene_bounced_runs"], n["refusals"]
+    W, H, T, row = 760, 300, 112, 46
+    # left panel: resolved of 60 (know → enforce); right panel: runs bounced on hygiene (C arms)
+    L1, R1, L2, R2 = 130, 380, 520, 720
+    sx1 = lambda v: L1 + v / 60 * (R1 - L1)
+    sx2 = lambda v: L2 + v / 60 * (R2 - L2)
+    s = Svg(W, H, "Figure 5. Enforcing process rules at the tool boundary (v14)",
+            f"Left: core runs resolved of 60. A_know {res['A_know']} vs A_enforce {res['A_enforce']}; C_know "
+            f"{res['C_know']} vs C_enforce {res['C_enforce']}. Right: runs bounced by the hygiene check, C_know "
+            f"{hyg['C_know']} of 60 vs C_enforce {hyg['C_enforce']} of 60.")
+    s.text(20, 28, "Process enforcement (v14, exploratory): the violation it targets falls, resolution does not move",
+           15, INK, weight=600)
+    s.dot(25, 50, INK2, r=7, hollow=True)
+    s.text(38, 54, "*_know (v5/v6/v8)", 12, INK2)
+    s.dot(185, 50, BLUE)
+    s.text(198, 54, "*_enforce (v14)", 12, INK2)
+    s.text(L1, T - 30, "Core runs resolved (of 60)", 12.5, INK, weight=600)
+    s.text(L2, T - 30, "Hygiene-check bounces (of 60)", 12.5, INK, weight=600)
+    bottom = T + row * 2 - row / 2 + 6
+    for v in range(0, 61, 15):
+        for sx, l in ((sx1, L1), (sx2, L2)):
+            s.line(sx(v), T - 16, sx(v), bottom, GRID if v else AXIS, 1 if v else 1.5)
+            s.text(sx(v), bottom + 18, str(v), 11, MUTED, "middle", tabular=True)
+    for i, (k, e) in enumerate((("A_know", "A_enforce"), ("C_know", "C_enforce"))):
+        y = T + i * row
+        s.text(L1 - 14, y + 4, k[0] + " arms", 12.5, INK2, "end")
+        s.line(sx1(min(res[k], res[e])), y, sx1(max(res[k], res[e])), y, AXIS, 2)
+        s.dot(sx1(res[k]), y, INK2, r=7, hollow=True)
+        s.dot(sx1(res[e]), y, BLUE)
+        s.text(sx1(max(res[k], res[e])) + 10, y + 4, f"{res[k]} → {res[e]}", 12, INK, weight=600, tabular=True)
+    y = T + row / 2
+    s.text(L2 - 14, y + 4, "C arms", 12.5, INK2, "end")
+    s.line(sx2(hyg["C_enforce"]), y, sx2(hyg["C_know"]), y, AXIS, 2)
+    s.dot(sx2(hyg["C_know"]), y, INK2, r=7, hollow=True)
+    s.dot(sx2(hyg["C_enforce"]), y, BLUE)
+    s.text(sx2(hyg["C_know"]) - 4, y - 12, f"{hyg['C_know']} → {hyg['C_enforce']}", 12, INK, "end", 600, True)
+    s.text(20, H - 52, f"Tool refusals in v14: scratch files {ref['A_enforce']['scratch'] + ref['C_enforce']['scratch']}, "
+           f"unrun edits at submit {ref['A_enforce']['verify'] + ref['C_enforce']['verify']}, test edits "
+           f"{ref['A_enforce']['tests'] + ref['C_enforce']['tests']}, network {ref['A_enforce']['network'] + ref['C_enforce']['network']}.",
+           11.5, INK2)
+    s.text(20, H - 34, "Controls are the non-concurrent core runs; v14 also carries the v12 prompt fix, so part of the "
+           "hygiene drop is not enforcement.", 11.5, INK2)
+    s.text(20, H - 16, "Paired by task and seed, 60 pairs per arm. Exploratory: not pre-registered.", 11.5, MUTED)
+    return s.save("fig5-enforcement.svg")
+
+
 if __name__ == "__main__":
-    for f in (fig1, fig2, fig3, fig4):
+    for f in (fig1, fig2, fig3, fig4, fig5):
         print(f().relative_to(ROOT))
