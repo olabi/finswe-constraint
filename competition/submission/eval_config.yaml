@@ -1,0 +1,7 @@
+# Pilot budget (paper Section 4): 40 tool calls, 12 minutes, 300 s per command.
+# The official sample uses 10 calls / 1 minute; inference.py defaults are 100 calls / 60 minutes.
+evaluation:
+  timeout_seconds: 300
+  max_tool_calls: 40
+  max_time_minutes: 12
+  max_turns: 80

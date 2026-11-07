@@ -1,0 +1,7 @@
+# Pilot settings (paper Section 4): thinking off, 8k output, temperature 0.2.
+temperature: 0.2
+top_p: 0.95
+top_k: 40
+max_output_tokens: 8192
+thinking_config:
+  thinking_budget: 0
