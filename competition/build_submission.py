@@ -75,6 +75,10 @@ def main() -> int:
     ap.add_argument("--sample", type=Path, help="the competition's sample_submission/ (only if the source uses adapters)")
     ap.add_argument("--out", type=Path, default=Path("submission.zip"))
     a = ap.parse_args()
+    if a.out.name != "submission.zip":
+        print(f"✗ --out must be named submission.zip (Kaggle refused other names with 400); got {a.out.name}")
+        return 1
+    a.out.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         build = Path(tmp) / "submission"
         shutil.copytree(a.src, build)
