@@ -32,10 +32,16 @@ Submitting (`kaggle competitions submit`) is an outward action that needs the us
 | Date | Kaggle id | Package | Public score |
 |---|---|---|---|
 | 2026-11-07 | 58076537 | v1 `competition/submission` (repo 270e19a) | 0.08 |
+| 2026-11-08 | 58125674 | v2 `competition/submission_v2` (repo f861fd6) | pending |
 
 Earlier entries from this account (2026-09-28 to 09-30, GUAM AGT-01) all scored 0.00.
 
-## v2 (`competition/submission_v2`, not yet submitted)
+**The uploaded file must be named `submission.zip`.** The same v2 archive uploaded as
+`submission_v2.zip` was refused twice with `400 Bad Request` from `CreateSubmission`, with no
+reason given; renamed to `submission.zip`, it was accepted at once. Keep `--out` pointing at a
+file called `submission.zip` (in a separate folder per version).
+
+## v2 (`competition/submission_v2`)
 
 v2 starts from the public notebook "Gemma 4 | Budget-Aware Coding Agent - Efficient Navigation",
 which adapts matterhorn3838's "Gemma 4 SuperAgent"
@@ -52,5 +58,5 @@ v2 keeps the public configuration and changes two things:
    core runs bounced on hygiene), and untracked files are part of the submitted patch.
 
 ```bash
-python3 competition/build_submission.py --src competition/submission_v2 --out submission.zip
+python3 competition/build_submission.py --src competition/submission_v2 --out v2/submission.zip
 ```
