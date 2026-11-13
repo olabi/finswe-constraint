@@ -32,7 +32,7 @@ Submitting (`kaggle competitions submit`) is an outward action that needs the us
 | Date | Kaggle id | Package | Public score |
 |---|---|---|---|
 | 2026-11-07 | 58076537 | v1 `competition/submission` (repo 270e19a) | 0.08 |
-| 2026-11-08 | 58125674 | v2 `competition/submission_v2` (repo f861fd6) | pending |
+| 2026-11-08 | 58125674 | v2 `competition/submission_v2` (repo f861fd6) | 0.18 |
 
 Earlier entries from this account (2026-09-28 to 09-30, GUAM AGT-01) all scored 0.00.
 
@@ -73,8 +73,9 @@ answer by the prior anyway:
    message from the issue appears in the patch. v3 makes it run `git diff | grep -cF` for those
    literals, so the check is executed instead of recalled.
 
-These are prompt rules, not enforced by the harness, and v3 has not been scored. v2's score was
-not known when v3 was written, so the two changes are untested on top of an untested base.
+These are prompt rules, not enforced by the harness, and v3 has not been scored. v2 scored 0.18,
+the same as the public configuration it starts from, so its two changes showed no measurable
+gain or loss; v3 is measured against that 0.18.
 
 ```bash
 python3 competition/build_submission.py --src competition/submission_v3 --out v3/submission.zip
