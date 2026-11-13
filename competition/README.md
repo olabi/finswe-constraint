@@ -63,7 +63,7 @@ python3 competition/build_submission.py --src competition/submission_v2 --out v2
 
 ## v3 (`competition/submission_v3`, not yet submitted)
 
-v3 is v2 plus two prompt rules, prompted by the paper-track writeup "TwinBench" (R. Saxena,
+v3 is v2 plus three prompt rules. The first two are prompted by the paper-track writeup "TwinBench" (R. Saxena,
 CC BY 4.0), which reports that models recite a rule that conflicts with their priors and then
 answer by the prior anyway:
 
@@ -72,6 +72,14 @@ answer by the prior anyway:
 2. **Mechanical literal check.** v2 asks the agent to confirm from memory that every name and
    message from the issue appears in the patch. v3 makes it run `git diff | grep -cF` for those
    literals, so the check is executed instead of recalled.
+
+3. **A search procedure for issues that name no symbol.** The paper-track writeup "Where Is the
+   Bug? Hop-Distance Analysis of Gemma 4 Code Graphs" (H. Kumami, CC BY 4.0) finds that the
+   issue names the edit site in 28 of the 129 public tasks, and that in 51 no symbol in the
+   issue resolves to a code-graph node (28 of 48 `rich` tasks, whose issues describe rendered
+   output). Lexical search over source text was the best simple localizer there. v3 therefore
+   tells the agent to list files by topic and grep source text for the issue's words when no
+   symbol is named. The same analysis supports v2's choice not to declare the graph tools.
 
 These are prompt rules, not enforced by the harness, and v3 has not been scored. v2 scored 0.18,
 the same as the public configuration it starts from, so its two changes showed no measurable
