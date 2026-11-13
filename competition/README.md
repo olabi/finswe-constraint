@@ -63,7 +63,7 @@ python3 competition/build_submission.py --src competition/submission_v2 --out v2
 
 ## v3 (`competition/submission_v3`, not yet submitted)
 
-v3 is v2 plus three prompt rules. The first two are prompted by the paper-track writeup "TwinBench" (R. Saxena,
+v3 is v2 plus four groups of prompt rules. The first two are prompted by the paper-track writeup "TwinBench" (R. Saxena,
 CC BY 4.0), which reports that models recite a rule that conflicts with their priors and then
 answer by the prior anyway:
 
@@ -80,6 +80,17 @@ answer by the prior anyway:
    output). Lexical search over source text was the best simple localizer there. v3 therefore
    tells the agent to list files by topic and grep source text for the issue's words when no
    symbol is named. The same analysis supports v2's choice not to declare the graph tools.
+
+4. **Package first, and more than one edit site.** "Where Is the Fix? Localization Benchmark &
+   Graph Audit for Gemma 4 Agents" (TriNgo288, Nguyễn Duy Thái, Vinh Lê; CC BY 4.0) labels the
+   same 129 tasks independently and agrees with the hop-distance study (no resolvable symbol in
+   about half the issues; BM25 over source is the strongest single localizer, Hit@10 0.51). It
+   adds that documentation snippets distract lexical search (69% of FastAPI graph nodes are
+   isolated tutorial functions, while only 2% of edited symbols are), that restricting
+   candidates to the package raises top-1 file accuracy from 0.37 to 0.43, and that a task
+   edits 3.9 symbols on average, with 32.5% touching more than one file. v3 therefore searches
+   the package directory before documentation and example code, and spends one search after
+   the first edit on sibling sites of the same pattern.
 
 These are prompt rules, not enforced by the harness, and v3 has not been scored. v2 scored 0.18,
 the same as the public configuration it starts from, so its two changes showed no measurable
