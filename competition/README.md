@@ -60,3 +60,22 @@ v2 keeps the public configuration and changes two things:
 ```bash
 python3 competition/build_submission.py --src competition/submission_v2 --out v2/submission.zip
 ```
+
+## v3 (`competition/submission_v3`, not yet submitted)
+
+v3 is v2 plus two prompt rules, prompted by the paper-track writeup "TwinBench" (R. Saxena,
+CC BY 4.0), which reports that models recite a rule that conflicts with their priors and then
+answer by the prior anyway:
+
+1. **Issue over prior.** When the issue asks for something unusual (an odd default, a reversed
+   order, an exception to a common rule), implement what it says.
+2. **Mechanical literal check.** v2 asks the agent to confirm from memory that every name and
+   message from the issue appears in the patch. v3 makes it run `git diff | grep -cF` for those
+   literals, so the check is executed instead of recalled.
+
+These are prompt rules, not enforced by the harness, and v3 has not been scored. v2's score was
+not known when v3 was written, so the two changes are untested on top of an untested base.
+
+```bash
+python3 competition/build_submission.py --src competition/submission_v3 --out v3/submission.zip
+```
